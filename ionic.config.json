@@ -1,0 +1,7 @@
+{
+  "name": "appking",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

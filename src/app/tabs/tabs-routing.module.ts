@@ -8,27 +8,69 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
-        loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+        path: 'home',
+        loadChildren: () => import('../pages/home/home.module').then(m => m.HomePageModule)
       },
       {
-        path: 'tab2',
-        loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+        path: 'product',
+        loadChildren: () => import('../pages/product/product.module').then(m => m.ProductPageModule)
       },
       {
-        path: 'tab3',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        path: 'vendors',
+        loadChildren: () => import('../pages/vendors/vendors.module').then( m => m.VendorsPageModule)
+      },
+      {
+        path: 'detail-product/:id',
+        loadChildren: () => import('../pages/detail-product/detail-product.module').then( m => m.DetailProductPageModule)
+      },
+      {
+        path: 'orders',
+        loadChildren: () => import('../pages/orders/orders.module').then( m => m.OrdersPageModule)
+      },
+      {
+        path: 'sales',
+        loadChildren: () => import('../pages/sales/sales.module').then( m => m.SalesPageModule)
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/home',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: 'tabs/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    redirectTo: '/tabs/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'product',
+    redirectTo: '/tabs/product',
+    pathMatch: 'full'
+  },
+  {
+    path: 'detail-product/:id',
+    redirectTo: '/tabs/detail-product/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'vendors',
+    redirectTo: '/tabs/vendors',
+    pathMatch: 'full'
+  },
+  {
+    path: 'orders',
+    redirectTo: '/tabs/orders',
+    pathMatch: 'full'
+  },
+  {
+    path: 'sales',
+    redirectTo: '/tabs/sales',
     pathMatch: 'full'
   }
 ];

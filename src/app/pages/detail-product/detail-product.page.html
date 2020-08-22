@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/product"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Detalle Producto</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input autocapitalize autofocus required [(ngModel)]="product.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Precio Compra</ion-label>
+        <ion-input required [(ngModel)]="product.purchase_price"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Precio Venta</ion-label>
+        <ion-input required [(ngModel)]="product.sale_price"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Volúmen</ion-label>
+        <ion-input required [(ngModel)]="product.volume"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Stock</ion-label>
+        <ion-input required [(ngModel)]="product.quantity"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Categoría</ion-label>
+        <ion-input required [(ngModel)]="product.category"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Categoría</ion-label>
+        <ion-select interface="popover">
+          <ion-select-option value="nes">NES</ion-select-option>
+          <ion-select-option value="n64">Nintendo64</ion-select-option>
+          <ion-select-option value="ps">PlayStation</ion-select-option>
+          <ion-select-option value="genesis">Sega Genesis</ion-select-option>
+          <ion-select-option value="saturn">Sega Saturn</ion-select-option>
+          <ion-select-option value="snes">SNES</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item-group class="ion-text-center">
+        <ion-button color="success" (click)="saveProduct(product)">
+          <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
+        </ion-button>
+      </ion-item-group>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

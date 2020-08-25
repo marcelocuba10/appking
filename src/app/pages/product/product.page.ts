@@ -23,6 +23,7 @@ export class ProductPage implements OnInit {
     this.getProducts();
   }
 
+   //uso este metodo porque me los otros metodos no me devuelven el ID
   async getProducts() {
     try {
       this.productsSubcription = this.firestore.collection("products", ref => ref.orderBy("timestamp", "desc")).snapshotChanges().subscribe(

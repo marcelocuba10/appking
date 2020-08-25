@@ -84,7 +84,9 @@
           <th scope="col">Nombre</th>
           <th scope="col">Cantidad</th>
           <th scope="col">Volumen</th>
-          <th scope="col">Precio</th>
+          <th scope="col">Precio Compra</th>
+          <th scope="col">Precio Venta</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -94,6 +96,15 @@
           <td>{{product.quantity}}</td>
           <td>{{product.volume}}</td>
           <td>{{product.sale_price | currency: 'GS'}}</td>
+          <td>{{product.purchase_price | currency: 'GS'}}</td>
+          <td>
+            <ion-button size="small" color="success" [routerLink]="['/detail-product/', product.id]">
+              <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button size="small" color="danger" (click)="presentAlertConfirmDelete(product.id)">
+              <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
+            </ion-button>
+          </td>
         </tr>
       </tbody>
     </table>

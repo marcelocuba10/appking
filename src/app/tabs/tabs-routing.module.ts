@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/sales/sales.module').then( m => m.SalesPageModule)
       },
       {
+        path: 'customer',
+        loadChildren: () => import('../pages/customer/customer.module').then( m => m.CustomerPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
@@ -46,6 +50,11 @@ const routes: Routes = [
   {
     path: 'home',
     redirectTo: '/tabs/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'customer',
+    redirectTo: '/tabs/customer',
     pathMatch: 'full'
   },
   {

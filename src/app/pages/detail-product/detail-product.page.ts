@@ -8,6 +8,7 @@ import { AppService } from 'src/app/services/app.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
+import { Category } from "../../models/category";
 
 @Component({
   selector: 'app-detail-product',
@@ -19,6 +20,8 @@ export class DetailProductPage implements OnInit {
   public product = {} as Product;
   private loading: any;
   private productSubscription: Subscription;
+  private categorySubscription: Subscription;
+  private categories : any;
 
   constructor(
     private loadingCtrl: LoadingController,
@@ -34,10 +37,12 @@ export class DetailProductPage implements OnInit {
 
   ngOnInit() {
     this.getProductById();
+    this.getCategory();
   }
 
   ngOnDestroy() {
     if (this.productSubscription) this.productSubscription.unsubscribe();
+    if (this.categorySubscription) this.categorySubscription.unsubscribe();
   }
 
   async getProductById() {
@@ -50,8 +55,13 @@ export class DetailProductPage implements OnInit {
         this.product.sale_price = data["sale_price"];
         this.product.volume = data["volume"];
         this.product.quantity = data["quantity"];
-        console.log(this.product);
       })
+  }
+
+  async getCategory() {
+    this.categorySubscription =(await this.productService.getProducts()).subscribe(data => {
+      this.categories = data;
+    })
   }
 
   async saveProduct() {
@@ -95,13 +105,6 @@ export class DetailProductPage implements OnInit {
     }
   }
 
-  async presentLoading() {
-    this.loading = await this.loadingCtrl.create({
-      message: "Por favor, espere.."
-    });
-    return this.loading.present();
-  }
-
   formValidation() {
     if (!this.product.name) {
       this.appService.presentToast("Ingrese nombre del producto");
@@ -134,6 +137,13 @@ export class DetailProductPage implements OnInit {
     }
 
     return true;
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      message: "Por favor, espere.."
+    });
+    return this.loading.present();
   }
 
 }

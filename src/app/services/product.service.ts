@@ -18,19 +18,11 @@ export class ProductService {
   }
 
   async getProducts() {
-    // return this.productsCollection.snapshotChanges().pipe(
-    //   map(actions => {
-    //     return actions.map(a => {
-    //       const data = a.payload.doc.data();
-    //       const id = a.payload.doc.id;
-
-    //       return { id, ...data };
-    //     });
-    //   })
-    // );
-
     return this.firestore.collection("products", ref => ref.orderBy("timestamp", "desc")).valueChanges();
+  }
 
+  async getCategory() {
+    return this.firestore.collection("category", ref => ref.orderBy("desc")).valueChanges();
   }
 
   async getProductById(id: string) {

@@ -5,6 +5,6 @@ export interface Product {
     category?:string;
     volume?: string;
     quantity?: number;
-    created?: number;
+    created?: string;
     timestamp?: number;
 }

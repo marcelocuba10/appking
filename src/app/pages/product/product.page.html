@@ -24,9 +24,44 @@
 </ion-header>
 
 <ion-content>
-  <ion-button class="ion-margin" color="success" routerLink="/detail-product">Agregar producto</ion-button>
 
-  <!-- <ion-list *ngIf="!products.length">
+  <ion-button class="ion-margin" color="success" routerLink="/detail-product"><ion-icon name="add-outline"></ion-icon> Nuevo producto</ion-button>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Volumen</th>
+          <th scope="col">Precio Compra</th>
+          <th scope="col">Precio Venta</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <th scope="row">1</th>
+          <td>{{product.name}}</td>
+          <td>{{product.quantity}}</td>
+          <td>{{product.volume}}</td>
+          <td>{{product.sale_price | currency: 'GS'}}</td>
+          <td>{{product.purchase_price | currency: 'GS'}}</td>
+          <td>
+            <ion-button size="small" color="success" [routerLink]="['/detail-product/', product.id]">
+              <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button size="small" color="danger" (click)="ConfirmDelete(product.id)">
+              <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
+            </ion-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ion-list *ngIf="!products.length">
     <ion-item *ngFor="let item of [0,1,2]">
       <ion-avatar slot="start">
         <ion-skeleton-text animated></ion-skeleton-text>
@@ -43,71 +78,6 @@
         </p>
       </ion-label>
     </ion-item>
-  </ion-list> -->
-
-  <!-- <ion-list>
-    <ion-item-sliding *ngFor="let product of products">
-      <ion-item lines="full" button [routerLink]="['/detail-product/',product.id]">
-        <ion-avatar slot="start">
-          <img src="https://www.elindiomayorista.com/wp-content/uploads/2019/11/AYUDIN-LAVANDINA-EN-GEL.jpg" alt="">
-        </ion-avatar>
-        <ion-label>
-          {{product.name}}
-          <p>{{product.volume}}</p>
-          <p>{{product.quantity}}</p>
-          <p>{{ product.created | date: 'short' }}</p>
-        </ion-label>
-        <ion-note color="primary" slot="end" *ngIf="product.sale_price">{{product.sale_price | currency: 'BRL'}}
-        </ion-note>
-      </ion-item>
-
-      <ion-item-options side="start">
-        <ion-item-option color="secondary" [routerLink]="['/detail-product/', product.id]">
-          <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="presentAlertConfirmDelete(product.id)">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-
-  </ion-list> -->
-
-  <div class="table-responsive">
-    <table class="table table-hover table-bordered table-striped">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Cantidad</th>
-          <th scope="col">Volumen</th>
-          <th scope="col">Precio Compra</th>
-          <th scope="col">Precio Venta</th>
-          <th scope="col">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of products" [routerLink]="['/detail-product/',product.id]">
-          <th scope="row">1</th>
-          <td>{{product.name}}</td>
-          <td>{{product.quantity}}</td>
-          <td>{{product.volume}}</td>
-          <td>{{product.sale_price | currency: 'GS'}}</td>
-          <td>{{product.purchase_price | currency: 'GS'}}</td>
-          <td>
-            <ion-button size="small" color="success" [routerLink]="['/detail-product/', product.id]">
-              <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>
-            </ion-button>
-            <ion-button size="small" color="danger" (click)="presentAlertConfirmDelete(product.id)">
-              <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
-            </ion-button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  </ion-list>
 
 </ion-content>

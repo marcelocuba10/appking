@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
-import { AlertController, LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 
 import * as moment from 'moment';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { AppService } from 'src/app/services/app.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
-import { Category } from "../../models/category";
 
 @Component({
   selector: 'app-detail-product',
@@ -18,10 +16,10 @@ import { Category } from "../../models/category";
 export class DetailProductPage implements OnInit {
   private productId: any;
   public product = {} as Product;
+  public categories: any;
   private loading: any;
   private productSubscription: Subscription;
   private categorySubscription: Subscription;
-  private categories : any;
 
   constructor(
     private loadingCtrl: LoadingController,
@@ -36,7 +34,9 @@ export class DetailProductPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getProductById();
+    if (this.productId) {
+      this.getProductById();
+    }
     this.getCategory();
   }
 
@@ -59,7 +59,7 @@ export class DetailProductPage implements OnInit {
   }
 
   async getCategory() {
-    this.categorySubscription =(await this.productService.getProducts()).subscribe(data => {
+    this.categorySubscription = (await this.productService.getCategory()).subscribe(data => {
       this.categories = data;
     })
   }
@@ -70,13 +70,13 @@ export class DetailProductPage implements OnInit {
 
     if (this.formValidation()) {
 
+      this.product.created = moment().locale('es').format('L');
+      this.product.timestamp = Date.now();
+
       if (this.productId) {
         //update product
         console.log(this.productId);
         try {
-          this.product.created = new Date().getTime();
-          this.product.timestamp = Date.now();
-
           await this.productService.updateProduct(this.productId, this.product);
           this.loading.dismiss();
           this.navCtrl.navigateRoot("/product");
@@ -89,10 +89,6 @@ export class DetailProductPage implements OnInit {
       } else {
         //create product
         try {
-          //this.product.created = moment().locale('es').format('dddd, D MMMM, h:mm a');
-          this.product.created = new Date().getTime();
-          this.product.timestamp = Date.now();
-
           await this.productService.addProduct(this.product);
           this.loading.dismiss();
           this.navCtrl.navigateRoot("/product");

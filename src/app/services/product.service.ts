@@ -9,21 +9,15 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductService {
-  private productsCollection: AngularFirestoreCollection<Product>;
   public products = new Array<Product>();
+  
   constructor(
     private firestore: AngularFirestore,
-  ) {
-    this.productsCollection = this.firestore.collection<Product>('Products');
-  }
+  ) {}
 
-  async getProducts() {
-    return this.firestore.collection("products", ref => ref.orderBy("timestamp", "desc")).valueChanges();
-  }
-
-  async getCategory() {
-    return this.firestore.collection("category", ref => ref.orderBy("desc")).valueChanges();
-  }
+  // async getProducts() {
+  //   return this.firestore.collection("products", ref => ref.orderBy("timestamp", "desc")).valueChanges();
+  // }
 
   async getProductById(id: string) {
     //return await this.firestore.doc<Product>(id).valueChanges();
@@ -39,8 +33,13 @@ export class ProductService {
     //return this.firestore.doc<Product>(id).set({name:'2.550'}); //si quisieramos actualizar solo un campo en especifico
   }
 
-  deleteProduct(id: string) {
-    return this.firestore.doc(id).delete();
+  async deleteProduct(id: string) {
+    //return this.firestore.doc(id).delete();
+    return await this.firestore.doc("products/" + id).delete();
+  }
+
+  async getCategory() {
+    return this.firestore.collection("category/").valueChanges();
   }
 
 }

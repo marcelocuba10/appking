@@ -1,0 +1,45 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/vendors"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Detalle Vendedor</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input autocapitalize autofocus required [(ngModel)]="vendor.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellidos</ion-label>
+        <ion-input required type="text" [(ngModel)]="vendor.lastName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Telefono</ion-label>
+        <ion-input required type="number" [(ngModel)]="vendor.phone"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Direccion</ion-label>
+        <ion-input required type="text" [(ngModel)]="vendor.address"></ion-input>
+      </ion-item>
+      <ion-item-group class="ion-text-center">
+        <ion-button color="success" (click)="saveVendor(vendor)">
+          <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
+        </ion-button>
+      </ion-item-group>
+    </ion-card-content>
+  </ion-card>
+  
+</ion-content>

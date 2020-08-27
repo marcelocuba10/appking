@@ -1,0 +1,49 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/customer"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Detalle Cliente</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Razón Social</ion-label>
+        <ion-input type="text" autofocus required [(ngModel)]="customer.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">RUC / CI</ion-label>
+        <ion-input type="text" required [(ngModel)]="customer.ruc"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Telefono</ion-label>
+        <ion-input type="number" required [(ngModel)]="customer.phone"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Dirección</ion-label>
+        <ion-input type="text" required [(ngModel)]="customer.address"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Encargado / Representante</ion-label>
+        <ion-input type="text" required [(ngModel)]="customer.salesman"></ion-input>
+      </ion-item>
+      <ion-item-group class="ion-text-center">
+        <ion-button color="success" (click)="saveCustomer(customer)">
+          <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
+        </ion-button>
+      </ion-item-group>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

@@ -45,7 +45,16 @@ const routes: Routes = [
   {
     path: 'detail-vendor/:id',
     loadChildren: () => import('./pages/detail-vendor/detail-vendor.module').then( m => m.DetailVendorPageModule)
+  },
+  {
+    path: 'detail-customer',
+    loadChildren: () => import('./pages/detail-customer/detail-customer.module').then( m => m.DetailCustomerPageModule)
+  },
+  {
+    path: 'detail-customer/:id',
+    loadChildren: () => import('./pages/detail-customer/detail-customer.module').then( m => m.DetailCustomerPageModule)
   }
+
 
 ];
 @NgModule({

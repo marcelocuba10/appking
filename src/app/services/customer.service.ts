@@ -17,6 +17,10 @@ export class CustomerService {
     return this.firestore.doc("customers/" + id);
   }
 
+  async getCustomers(){
+    return this.firestore.collection("customers").valueChanges();
+  }
+
   async addCustomer(customer: Customer) {
     return this.firestore.collection("customers").add(customer);
   }

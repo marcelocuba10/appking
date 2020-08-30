@@ -44,6 +44,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/detail-customer/detail-customer.module').then( m => m.DetailCustomerPageModule)
       },
       {
+        path: 'detail-sale/:id',
+        loadChildren: () => import('../pages/detail-sale/detail-sale.module').then( m => m.DetailSalePageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
@@ -98,6 +102,11 @@ const routes: Routes = [
   {
     path: 'detail-customer/:id',
     redirectTo: '/tabs/detail-customer/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'detail-sale/:id',
+    redirectTo: '/tabs/detail-sale/:id',
     pathMatch: 'full'
   }
 ];

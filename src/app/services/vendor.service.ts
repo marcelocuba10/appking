@@ -17,6 +17,10 @@ export class VendorService {
     return this.firestore.doc("vendors/" + id);
   }
 
+  async getVendors(){
+    return this.firestore.collection("vendors").valueChanges();
+  }
+
   async addVendor(vendor: Vendor) {
     return this.firestore.collection("vendors").add(vendor);
   }

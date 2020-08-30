@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/sales"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle Venta</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Cliente</ion-label>
+        <ion-select required [(ngModel)]="sale.idCustomer" ok-text="Aceptar" cancel-text="Cancelar">
+          <ion-select-option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Vendedor</ion-label>
+        <ion-select required [(ngModel)]="sale.idVendor" ok-text="Aceptar" cancel-text="Cancelar">
+          <ion-select-option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Observación</ion-label>
+        <ion-input autocapitalize autofocus required [(ngModel)]="sale.observation"></ion-input>
+      </ion-item>
+      <ion-item-group class="ion-text-center">
+        <ion-button color="success" (click)="saveSale(sale)">
+          <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
+        </ion-button>
+      </ion-item-group>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

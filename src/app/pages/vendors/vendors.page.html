@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="tertiary">
     <ion-title class="ion-text-center">Vendedores</ion-title>
   </ion-toolbar>
   <meta charset="utf-8">
@@ -31,7 +31,6 @@
     <table class="table table-hover table-bordered table-striped">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Nombre</th>
           <th scope="col">Apellidos</th>
           <th scope="col">Telefono</th>
@@ -42,7 +41,6 @@
       </thead>
       <tbody>
         <tr *ngFor="let vendor of vendors">
-          <th scope="row">1</th>
           <td>{{vendor.name}}</td>
           <td>{{vendor.lastName}}</td>
           <td>{{vendor.phone}}</td>

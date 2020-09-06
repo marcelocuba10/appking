@@ -3,41 +3,149 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/sales"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalle Venta</ion-title>
+    <ion-title class="ion-text-center">Detalle Venta</ion-title>
     <ion-buttons slot="primary">
       <ion-button>
         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script type="module">
+    import { modalController } from 'https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/index.esm.js';
+    window.modalController = modalController;
+  </script>
 </ion-header>
 
 <ion-content>
   <ion-card>
     <ion-card-content>
-      <ion-item>
-        <ion-label>Cliente</ion-label>
-        <ion-select required [(ngModel)]="sale.idCustomer" ok-text="Aceptar" cancel-text="Cancelar">
-          <ion-select-option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
+      <h4>
+        <ion-icon name="bookmarks-outline"></ion-icon> Crear nueva venta 
+        {{saleId}}
+      </h4>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Cliente</label>
+          <select required class="form-control" [(ngModel)]="sale.idCustomer">
+            <option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Vendedor</label>
+          <select class="form-control" [(ngModel)]="sale.idVendor">
+            <option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</option>
+          </select>
+        </div>
+      </div>
+      <!-- <ion-item>
         <ion-label>Vendedor</ion-label>
         <ion-select required [(ngModel)]="sale.idVendor" ok-text="Aceptar" cancel-text="Cancelar">
           <ion-select-option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}
           </ion-select-option>
         </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Observación</ion-label>
-        <ion-input autocapitalize autofocus required [(ngModel)]="sale.observation"></ion-input>
-      </ion-item>
-      <ion-item-group class="ion-text-center">
+      </ion-item> -->
+
+      <div class="row">
+        <div class="col-md-6">
+          <label for="exampleInputEmail1">Fecha de orden</label>
+          <input [(ngModel)]="sale.date" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="col float-right">
+          <ion-button class="ion-margin" color="success" (click)="presentModalProduct()">
+            <ion-icon name="add-outline"></ion-icon> Agregar Item
+          </ion-button>
+          <ion-button class="ion-margin" color="warning" (click)="getDetailsSale()">
+            <ion-icon name="add-outline"></ion-icon> refresh
+          </ion-button>
+        </div>
+      </div>
+      <div class="table-responsive" style="margin-top: 20px;">
+        <table id="myTable" class="table table-hover table-bordered table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">ID</th>
+              <th scope="col">Descripcion producto</th>
+              <th scope="col">Volumen</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Subtotal</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detail of details">
+              <td>{{item_c}}</td>
+              <td>{{detail.idProduct}}</td>
+              <td>{{detail.nameProduct}}</td>
+              <td>{{product.volume}}</td>
+              <td>{{detail.price}}</td>
+              <td>
+                <div class="input-group-quantity">
+                  <div class="input-prepend" (click)="decreaseQuantity()">
+                    <ion-icon name="remove-outline"></ion-icon>
+                  </div>
+                  <ion-input class="input-quantity" type="number" [(ngModel)]="detailSale.quantity"></ion-input>
+                  <div class="input-prepend" (click)="increaseQuantity()">
+                    <ion-icon name="add-outline"></ion-icon>
+                  </div>
+                </div>
+              </td>
+              <td>{{detail.subtotal}}</td>
+              <!--funcionara con la funcion de cantidad-->
+              <td>
+                <ion-button size="small" color="danger" (click)="ConfirmDelete(detail)">
+                  <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label for="exampleFormControlTextarea1">Observación</label>
+          <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
+            [(ngModel)]="sale.observation"></textarea>
+        </div>
+        <div class="col float-right">
+          <label class="font-price">{{sale.total | currency: 'GS '}}</label>
+        </div>
+      </div>
+
+      <ion-item-group class="ion-text-center float-right">
+        <ion-button color="secondary" defaultHref="/sales">
+          <ion-icon name="arrow-back-outline"></ion-icon>Volver
+        </ion-button>
         <ion-button color="success" (click)="saveSale(sale)">
           <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
         </ion-button>
       </ion-item-group>
+
     </ion-card-content>
   </ion-card>
+
+  <script type="text/javascript">
+    var rowCount = $('#myTable >tbody >tr').length;
+    console.log(rowCount);
+  </script>
 </ion-content>

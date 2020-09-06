@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { ToastController, LoadingController } from '@ionic/angular';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,8 @@ export class AppService {
   constructor(
     private firestore: AngularFirestore,
     private toastCtrl: ToastController,
-    private loadingCtrl : LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) { }
 
   async presentToast(message: string) {
@@ -23,4 +24,16 @@ export class AppService {
     });
     toast.present();
   }
+
+  async presentAlert(message: string) {
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Atencion',
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
 }

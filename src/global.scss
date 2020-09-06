@@ -25,10 +25,50 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-.m-icon{
+.m-icon {
     margin-right: 3px;
 }
 
 .alert-wrapper.sc-ion-alert-md {
     width: -webkit-fill-available;
+}
+
+.font-price {
+    font-size: 2.5rem;
+    color: firebrick;
+    font-weight: bold;
+    line-height: 1.15;
+    margin: 20px 20px 10px 0px;
+}
+
+.float-right {
+    float: right !important;
+    text-align: end;
+}
+
+ion-card{
+    padding: 10px 0px 10px 0px;
+}
+
+.input-group-quantity {
+    position: relative;
+    display: flex;
+    height: min-content;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.input-prepend {
+    display: flex;
+    align-items: center;
+    background-color: #ced4da;
+    padding: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.input-quantity {
+    text-align: center;
+    width: min-content;
 }

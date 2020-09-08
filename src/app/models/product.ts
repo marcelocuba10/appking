@@ -7,4 +7,5 @@ export interface Product {
     quantity?: number;
     created?: string;
     timestamp?: number;
+    image?: string;
 }

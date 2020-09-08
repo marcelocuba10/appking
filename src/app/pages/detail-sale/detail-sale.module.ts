@@ -1,3 +1,5 @@
+import { ModalDetailPageModule } from './../modal-detail/modal-detail.module';
+import { ModalDetailPage } from './../modal-detail/modal-detail.page';
 import { ProductPageModule } from './../product/product.module';
 import { ProductPage } from './../product/product.page';
 import { ModalProductPageModule } from './../modal-product/modal-product.module';
@@ -14,14 +16,16 @@ import { DetailSalePage } from './detail-sale.page';
 
 @NgModule({
   entryComponents:[
-    ModalProductPage
+    ModalProductPage,
+    ModalDetailPage
   ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     DetailSalePageRoutingModule,
-    ModalProductPageModule
+    ModalProductPageModule,
+    ModalDetailPageModule
   ],
   declarations: [DetailSalePage]
 })

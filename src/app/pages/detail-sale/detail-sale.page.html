@@ -38,7 +38,7 @@
   <ion-card>
     <ion-card-content>
       <h4>
-        <ion-icon name="bookmarks-outline"></ion-icon> Crear nueva venta 
+        <ion-icon name="bookmarks-outline"></ion-icon> Crear nueva venta
         {{saleId}}
       </h4>
       <div class="form-row">
@@ -66,14 +66,12 @@
       <div class="row">
         <div class="col-md-6">
           <label for="exampleInputEmail1">Fecha de orden</label>
-          <input [(ngModel)]="sale.date" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+          <input [(ngModel)]="sale.date" type="text" class="form-control" id="exampleInputEmail1"
+            aria-describedby="emailHelp">
         </div>
         <div class="col float-right">
-          <ion-button class="ion-margin" color="success" (click)="presentModalProduct()">
-            <ion-icon name="add-outline"></ion-icon> Agregar Item
-          </ion-button>
-          <ion-button class="ion-margin" color="warning" (click)="getDetailsSale()">
-            <ion-icon name="add-outline"></ion-icon> refresh
+          <ion-button class="ion-margin" color="success" (click)="presentModalDetail()">
+            <ion-icon name="add-outline"></ion-icon> Agregar Item detail
           </ion-button>
         </div>
       </div>
@@ -81,9 +79,8 @@
         <table id="myTable" class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th scope="col">Item</th>
               <th scope="col">ID</th>
-              <th scope="col">Descripcion producto</th>
+              <th scope="col">Descripcion</th>
               <th scope="col">Volumen</th>
               <th scope="col">Precio</th>
               <th scope="col">Cantidad</th>
@@ -93,24 +90,12 @@
           </thead>
           <tbody>
             <tr *ngFor="let detail of details">
-              <td>{{item_c}}</td>
               <td>{{detail.idProduct}}</td>
               <td>{{detail.nameProduct}}</td>
-              <td>{{product.volume}}</td>
+              <td>{{detail.volume}}</td>
               <td>{{detail.price}}</td>
-              <td>
-                <div class="input-group-quantity">
-                  <div class="input-prepend" (click)="decreaseQuantity()">
-                    <ion-icon name="remove-outline"></ion-icon>
-                  </div>
-                  <ion-input class="input-quantity" type="number" [(ngModel)]="detailSale.quantity"></ion-input>
-                  <div class="input-prepend" (click)="increaseQuantity()">
-                    <ion-icon name="add-outline"></ion-icon>
-                  </div>
-                </div>
-              </td>
+              <td>{{detail.quantity}}</td>
               <td>{{detail.subtotal}}</td>
-              <!--funcionara con la funcion de cantidad-->
               <td>
                 <ion-button size="small" color="danger" (click)="ConfirmDelete(detail)">
                   <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>

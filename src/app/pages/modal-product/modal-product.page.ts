@@ -1,10 +1,9 @@
-import { ActivatedRoute } from '@angular/router';
-import { ProductService } from './../../services/product.service';
+import { DetailSale } from './../../models/detail-sale';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AppService } from './../../services/app.service';
 import { Subscription } from 'rxjs';
 import { Product } from './../../models/product';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -14,16 +13,15 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ModalProductPage implements OnInit {
   public products = new Array<Product>();
-  productsSubcription: Subscription;
-  private productId: any;
+  private productsSubcription: Subscription;
+
+  // Data passed in by componentProps
+  @Input() saleId: string;
 
   constructor(
     private modalCtrl: ModalController,
     private appService: AppService,
     private firestore: AngularFirestore,
-    private alertCtrl: AlertController,
-    private productService: ProductService,
-    private actRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -43,23 +41,42 @@ export class ModalProductPage implements OnInit {
               sale_price: e.payload.doc.data()["sale_price"],
               volume: e.payload.doc.data()["volume"],
               quantity: e.payload.doc.data()["quantity"],
-              created: e.payload.doc.data()["created"]
+              created: e.payload.doc.data()["created"],
+              image: e.payload.doc.data()["image"]
             };
           });
         });
     } catch (error) {
       this.appService.presentToast(error);
     }
+
+    // try {
+    //   this.productsSubcription = this.firestore.collection("products", ref => ref.where("product.id", "==", this.detailSale.idProduct)).snapshotChanges().subscribe(
+    //     data => {
+    //       this.products = data.map(e => {
+    //         return {
+    //           id: e.payload.doc.id,
+    //           name: e.payload.doc.data()["name"],
+    //           category: e.payload.doc.data()["category"],
+    //           purchase_price: e.payload.doc.data()["purchase_price"],
+    //           sale_price: e.payload.doc.data()["sale_price"],
+    //           volume: e.payload.doc.data()["volume"],
+    //           quantity: e.payload.doc.data()["quantity"],
+    //           created: e.payload.doc.data()["created"]
+    //         };
+    //       });
+    //     });
+    //   console.log(this.saleId);
+    //   //console.log(this.doc.id);
+    // } catch (error) {
+    //   this.appService.presentToast(error);
+    // }
+
   }
 
   ngOnDestroy() {
     this.productsSubcription.unsubscribe();
   }
-
-  // Data passed in by componentProps
-  @Input() firstName: string;
-  @Input() lastName: string;
-  @Input() middleInitial: string;
 
   dismissModal() {
     // using the injected ModalController this page
@@ -69,7 +86,7 @@ export class ModalProductPage implements OnInit {
     });
   }
 
-  salirConArgumentos(product: Product) {
+  goToModalDetail(product: Product) {
     this.modalCtrl.dismiss(product);
   }
 }

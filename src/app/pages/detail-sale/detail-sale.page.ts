@@ -1,3 +1,4 @@
+import { ModalDetailPage } from './../modal-detail/modal-detail.page';
 import { DetailSale } from './../../models/detail-sale';
 import { Product } from './../../models/product';
 import { ModalProductPage } from './../modal-product/modal-product.page';
@@ -61,14 +62,14 @@ export class DetailSalePage implements OnInit {
 
   ngOnInit() {
     if (this.saleId) {
+      //si tiene ID muestra datos
       this.getSaleById();
+    }else{
+      //nueva venta
+      this.saleId = Date.now();
     }
 
     this.sale.date = moment().locale('es').format('L');
-
-    if (!this.saleId) {
-      this.saleId = Date.now();
-    }
 
     this.getCustomers();
     this.getVendors();
@@ -80,6 +81,29 @@ export class DetailSalePage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: ModalProductPage,
       cssClass: 'my-custom-class',
+      componentProps: {
+        'saleId': this.saleId
+      }
+    });
+
+    await modal.present();
+
+    //la data es un objeto que me permitira trabajar la info que viene del modal hijo
+    const { data } = await modal.onDidDismiss();
+    console.log("Retorno del modal detail:", data);
+
+      //por encuanto
+
+  }
+
+  async presentModalDetail() {
+
+    const modal = await this.modalCtrl.create({
+      component: ModalDetailPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        'saleId': this.saleId
+      }
     });
 
     await modal.present();
@@ -88,36 +112,7 @@ export class DetailSalePage implements OnInit {
     const { data } = await modal.onDidDismiss();
     console.log("Retorno del modal:", data);
 
-    //show product info initial
-    this.item_c++;
-
-    this.detailSale.idProduct = data.id;
-    this.detailSale.nameProduct = data.name;
-    this.detailSale.quantity = 1; //default quantity is 1
-    this.detailSale.price = data.sale_price;
-    this.detailSale.subtotal = data.sale_price;
-
-    //info product extra
-    this.product.quantity = data.quantity; //para calcular stock
-    this.product.volume = data.volume;
-
-    this.sale.total = this.detailSale.subtotal;  //por encuanto
-
-    //add detail-sale
-    try {
-
-      this.detailSale.idSale = this.saleId.toString();
-      console.log(this.saleId)
-      this.detailSaleService.addDetailsSale(this.detailSale);
-
-    } catch (error) {
-
-      this.appService.presentToast(error);
-
-    }
-
-    this.getDetailsSale();
-
+    this.sale.total = 2222;
   }
 
   decreaseQuantity() {
@@ -143,6 +138,8 @@ export class DetailSalePage implements OnInit {
 
   async getDetailsSale() {
 
+    console.log("id customer" + this.sale.idCustomer);
+
     // this.detailSaleSubscription = (await this.detailSaleService.getDetailsSale(this.saleId)).subscribe(data => {
     //   this.detailSale = data;
     // })
@@ -158,6 +155,7 @@ export class DetailSalePage implements OnInit {
               nameProduct: e.payload.doc.data()["nameProduct"],
               quantity: e.payload.doc.data()["quantity"],
               price: e.payload.doc.data()["price"],
+              volume: e.payload.doc.data()["volume"],
               subtotal: e.payload.doc.data()["subtotal"],
             };
           });
@@ -173,22 +171,6 @@ export class DetailSalePage implements OnInit {
     if (await this.formValidation()) {
 
       await this.presentLoading();
-
-      // try {
-
-      //   // this.detailSale.idSale = this.saleId.toString();
-      //   // this.firestore.collection("details-sale").doc(this.detailSale.idSale).set({ //.doc() si no encuentra el Id, creara y colocara los datos ahi
-      //   //   quantity: this.detailSale.quantity,
-      //   //   subtotal: this.detailSale.subtotal
-      //   // })
-
-      //   this.detailSaleService.addDetailsSale(this.detailSale);
-
-      // } catch (error) {
-      //   this.appService.presentToast(error);
-      //   this.loading.dismiss();
-      //   return;
-      // }
 
       this.sale.timestamp = Date.now();
       this.sale.date = moment().locale('es').format('L');
@@ -213,6 +195,9 @@ export class DetailSalePage implements OnInit {
         if (this.sale.observation == null) {
           this.sale.observation = "";  //da error guardar campos null
         }
+        //this.saleService.addSale(this.sale);
+
+        console.log(this.saleId);
         this.firestore.collection("sales").doc(this.saleId.toString()).set({
           idCustomer: this.sale.idCustomer,
           nameCustomer: this.sale.nameCustomer,
@@ -250,9 +235,11 @@ export class DetailSalePage implements OnInit {
           }
         })
       })
+      console.log("id customer" + this.sale.idCustomer);
     } catch (error) {
       this.appService.presentToast(error);
     }
+    console.log("id customer" + this.sale.idCustomer);
   }
 
   async getVendors() {
@@ -268,6 +255,7 @@ export class DetailSalePage implements OnInit {
     } catch (error) {
       this.appService.presentToast(error);
     }
+    console.log("id customer" + this.sale.idCustomer);
   }
 
   async formValidation() {
@@ -279,10 +267,10 @@ export class DetailSalePage implements OnInit {
       this.appService.presentAlert("Ingrese un Vendedor");
       return false;
     }
-    if (!this.detailSale.idProduct) {
-      this.appService.presentAlert("Ingrese un item para la venta");
-      return false;
-    }
+    // if (!this.detailSale.idProduct) {
+    //   this.appService.presentAlert("Ingrese un item para la venta");
+    //   return false;
+    // }
     return true;
   }
 

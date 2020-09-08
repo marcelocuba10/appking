@@ -4,5 +4,6 @@ export interface DetailSale {
     nameProduct?:string;
     quantity?:number;
     price?:number;
+    volume?:number;
     subtotal?:number;
 }

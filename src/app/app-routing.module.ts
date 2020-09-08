@@ -61,7 +61,11 @@ const routes: Routes = [
   {
     path: 'modal-product',
     loadChildren: () => import('./pages/modal-product/modal-product.module').then( m => m.ModalProductPageModule)
+  },  {
+    path: 'modal-detail',
+    loadChildren: () => import('./pages/modal-detail/modal-detail.module').then( m => m.ModalDetailPageModule)
   }
+
 
 
 

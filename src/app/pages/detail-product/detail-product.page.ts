@@ -55,6 +55,7 @@ export class DetailProductPage implements OnInit {
         this.product.sale_price = data["sale_price"];
         this.product.volume = data["volume"];
         this.product.quantity = data["quantity"];
+        this.product.image = data["image"];
       })
   }
 

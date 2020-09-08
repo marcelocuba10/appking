@@ -1,27 +1,28 @@
 <ion-header translucent>
   <ion-toolbar>
-    <ion-title>{{firstName}} - {{lastName}}</ion-title>
+    <ion-title class="ion-text-center">Seleccione un Producto</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismissModal()">Close</ion-button>
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon> Cerrar
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
-  <ion-searchbar placeholder="Buscar Producto.."></ion-searchbar>
-
   <ion-list>
-    <ion-item *ngFor="let product of products" (click)="salirConArgumentos(product)">
-      <ion-avatar slot="start">
-        <img src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg" />
-      </ion-avatar>
+    <ion-item *ngFor="let product of products" (click)="goToModalDetail(product)">
+      <ion-thumbnail slot="start">
+        <img src="{{product.image}}" />
+      </ion-thumbnail>
       <ion-label>
         <h2>{{product.name}}</h2>
-        <p>{{product.volume}}</p>
+        <p>Volumen: {{product.volume}}</p>
+        <p>Stock Disponible: {{product.quantity}}</p>
       </ion-label>
-      <ion-note style="font-size: inherit;" color="primary" slot="end">{{product.sale_price | currency: 'GS'}}</ion-note>
+      <ion-note color="primary" slot="end">{{product.sale_price | currency: 'GS'}}</ion-note>
     </ion-item>
   </ion-list>
-<ion-button (click)="salirConArgumentos()">salirConArgumentos</ion-button>
+
   <ion-list *ngIf="!products.length">
     <ion-item *ngFor="let item of [0,1,2]">
       <ion-avatar slot="start">

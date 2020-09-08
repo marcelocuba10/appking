@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon> Cerrar
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Item Detalle</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-grid>
+    <ion-row class="ion-text-center">
+      <ion-col size="12">
+        <ion-button color="warning" (click)="presentModalProduct()">Agregar Producto
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Nro de Item: {{saleId}}</ion-card-subtitle>
+      <ion-card-title>{{detailSale.nameProduct}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <img src="{{product.image}}" />
+        </ion-thumbnail>
+        <ion-label>
+          <p>Volumen: {{detailSale.volume}}</p>
+          <p>Stock Disponible: {{product.quantity}}</p>
+        </ion-label>
+        <ion-note color="primary" slot="end">
+          <div class="input-group-quantity">
+            <div class="input-prepend" (click)="decreaseQuantity()">
+              <ion-icon name="remove-outline"></ion-icon>
+            </div>
+            <ion-input class="input-quantity" type="number" [(ngModel)]="detailSale.quantity"></ion-input>
+            <div class="input-prepend" (click)="increaseQuantity()">
+              <ion-icon name="add-outline"></ion-icon>
+            </div>
+          </div>
+        </ion-note>
+      </ion-item>
+      <ion-text color="success">
+        <h3>Subtotal: {{detailSale.subtotal}}</h3>
+      </ion-text>
+    </ion-card-content>
+    <ion-grid>
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-button color="warning" (click)="saveDetailSale()">Guardar Item</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+</ion-content>

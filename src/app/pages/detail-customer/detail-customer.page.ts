@@ -57,7 +57,7 @@ export class DetailCustomerPage implements OnInit {
       this.customer.timestamp = Date.now();
 
       if (this.customerId) {
-        //update product
+        //update customer
         console.log(this.customerId);
         try {
           await this.customerService.updateCustomer(this.customerId, this.customer);
@@ -70,7 +70,7 @@ export class DetailCustomerPage implements OnInit {
         }
 
       } else {
-        //create product
+        //create customer
         try {
           await this.customerService.addCustomer(this.customer);
           this.loading.dismiss();

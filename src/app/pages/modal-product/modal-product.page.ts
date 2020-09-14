@@ -29,6 +29,7 @@ export class ModalProductPage implements OnInit {
   }
 
   async getProducts() {
+    
     try {
       this.productsSubcription = this.firestore.collection("products", ref => ref.orderBy("timestamp", "desc")).snapshotChanges().subscribe(
         data => {
@@ -49,28 +50,6 @@ export class ModalProductPage implements OnInit {
     } catch (error) {
       this.appService.presentToast(error);
     }
-
-    // try {
-    //   this.productsSubcription = this.firestore.collection("products", ref => ref.where("product.id", "==", this.detailSale.idProduct)).snapshotChanges().subscribe(
-    //     data => {
-    //       this.products = data.map(e => {
-    //         return {
-    //           id: e.payload.doc.id,
-    //           name: e.payload.doc.data()["name"],
-    //           category: e.payload.doc.data()["category"],
-    //           purchase_price: e.payload.doc.data()["purchase_price"],
-    //           sale_price: e.payload.doc.data()["sale_price"],
-    //           volume: e.payload.doc.data()["volume"],
-    //           quantity: e.payload.doc.data()["quantity"],
-    //           created: e.payload.doc.data()["created"]
-    //         };
-    //       });
-    //     });
-    //   console.log(this.saleId);
-    //   //console.log(this.doc.id);
-    // } catch (error) {
-    //   this.appService.presentToast(error);
-    // }
 
   }
 

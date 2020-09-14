@@ -48,6 +48,7 @@ export class VendorsPage implements OnInit {
   }
 
   async ConfirmDelete(id: string) {
+
     const alert = await this.alertCtrl.create({
       header: 'Atención',
       message: 'Desea eliminar este vendedor?',
@@ -70,6 +71,7 @@ export class VendorsPage implements OnInit {
       ]
     });
     await alert.present();
+    
   }
 
   //para que la subscripcion no este corriendo en segundo plano, destruimos

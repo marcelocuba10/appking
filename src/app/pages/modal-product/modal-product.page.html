@@ -1,8 +1,13 @@
 <ion-header translucent>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon name="pricetags-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title class="ion-text-center">Seleccione un Producto</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismissModal()">
+      <ion-button color="danger" (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon> Cerrar
       </ion-button>
     </ion-buttons>
@@ -19,7 +24,7 @@
         <p>Volumen: {{product.volume}}</p>
         <p>Stock Disponible: {{product.quantity}}</p>
       </ion-label>
-      <ion-note color="primary" slot="end">{{product.sale_price | currency: 'GS'}}</ion-note>
+      <ion-note style="font-size: 0.8rem;" color="primary" slot="end">{{product.sale_price | currency: 'GS '}}</ion-note>
     </ion-item>
   </ion-list>
 

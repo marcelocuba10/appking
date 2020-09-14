@@ -28,7 +28,7 @@ export class CustomerPage implements OnInit {
 
   async getCustomers() {
     try {
-      this.customerSubscription = this.firestore.collection("customers", ref => ref.orderBy("timestamp", "desc")).snapshotChanges().subscribe(
+      this.customerSubscription = this.firestore.collection("customers").snapshotChanges().subscribe(
         data => {
           this.customers = data.map(e => {
             return {

@@ -44,13 +44,15 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputPassword4">Cliente</label>
-          <select required class="form-control" [(ngModel)]="sale.idCustomer">
+          <input readonly *ngIf="!customers" [(ngModel)]="sale.nameCustomer" type="text" class="form-control">
+          <select *ngIf="customers" required class="form-control" [(ngModel)]="sale.idCustomer">
             <option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}</option>
           </select>
         </div>
         <div class="form-group col-md-6">
           <label for="inputPassword4">Vendedor</label>
-          <select class="form-control" [(ngModel)]="sale.idVendor">
+          <input readonly *ngIf="!vendors" [(ngModel)]="sale.nameVendor" type="text" class="form-control">
+          <select *ngIf="vendors" class="form-control" [(ngModel)]="sale.idVendor">
             <option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</option>
           </select>
         </div>
@@ -89,15 +91,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let detail of details">
-              <td>{{detail.idProduct}}</td>
+            <tr *ngFor="let detail of details ">
+              <td>{{detail.idSale}}</td>
               <td>{{detail.nameProduct}}</td>
               <td>{{detail.volume}}</td>
               <td>{{detail.price}}</td>
               <td>{{detail.quantity}}</td>
               <td>{{detail.subtotal}}</td>
               <td>
-                <ion-button size="small" color="danger" (click)="ConfirmDelete(detail)">
+                <ion-button size="small" color="danger" (click)="ConfirmDeleteDetail(detail.id)">
                   <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
                 </ion-button>
               </td>
@@ -118,7 +120,7 @@
       </div>
 
       <ion-item-group class="ion-text-center float-right">
-        <ion-button color="secondary" defaultHref="/sales">
+        <ion-button color="secondary" routerLink="/sales">
           <ion-icon name="arrow-back-outline"></ion-icon>Volver
         </ion-button>
         <ion-button color="success" (click)="saveSale(sale)">

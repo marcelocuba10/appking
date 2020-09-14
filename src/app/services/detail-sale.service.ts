@@ -12,23 +12,16 @@ export class DetailSaleService {
     private firestore: AngularFirestore
   ) { }
 
-  async getDetailsSale(saleId: string) {
-    //return this.firestore.doc("detail-sales/" + saleId).valueChanges();
-
-    return this.firestore.collection("details-sale", ref => ref.where('idSale', '==', saleId));
+  async getDetailsSale() {
+    return this.firestore.collection("details-sale").valueChanges();
   }
 
   async addDetailsSale(detailSale: DetailSale) {
-    return this.firestore.collection("details-sale").add(detailSale).then(function(docRef) {
-      console.log("Document written with ID: ", docRef.id);
-  })
-  .catch(function(error) {
-      console.error("Error adding document: ", error);
-  });
+    return this.firestore.collection("details-sale").add(detailSale);
   }
 
   async deleteDetailSale(id: string) {
-    return await this.firestore.doc("details-sale/" + id).delete();
+    return this.firestore.doc("details-sale/" + id).delete();
   }
 
 }

@@ -28,7 +28,7 @@ export class SalesPage implements OnInit {
 
   async getSales() {
     try {
-      this.saleSubscription = this.firestore.collection("sales").snapshotChanges().subscribe(data => {
+      this.saleSubscription = this.firestore.collection("sales", ref => ref.orderBy("timestamp", "desc")).snapshotChanges().subscribe(data => {
         this.sales = data.map(e => {
           return {
             id: e.payload.doc.id,

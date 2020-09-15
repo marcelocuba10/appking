@@ -1,3 +1,4 @@
+import { ProductService } from './../../services/product.service';
 import { Customer } from './../../models/customer';
 import { ModalDetailPage } from './../modal-detail/modal-detail.page';
 import { DetailSale } from './../../models/detail-sale';
@@ -51,7 +52,7 @@ export class DetailSalePage implements OnInit {
     private navCtrl: NavController,
     private readonly firestore: AngularFirestore,
     public modalCtrl: ModalController,
-    private detailSaleService: DetailSaleService,
+    private detailSaleService: DetailSaleService
   ) {
     this.saleId = this.actRoute.snapshot.paramMap.get("id");
   }
@@ -87,6 +88,7 @@ export class DetailSalePage implements OnInit {
 
     //the data is an object that will allow me to work the info that comes from the modal-detail
     const { data } = await modal.onDidDismiss();
+    //console.log("Return detail data: ", data); test
     this.getDetailsSale();
 
   }
@@ -151,6 +153,7 @@ export class DetailSalePage implements OnInit {
         if (this.sale.observation == null) {
           this.sale.observation = "";  //null error
         }
+
         this.firestore.collection("sales").doc(this.saleId.toString()).set({
           idCustomer: this.sale.idCustomer,
           nameCustomer: this.sale.nameCustomer,

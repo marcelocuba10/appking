@@ -10,10 +10,10 @@ import { map } from 'rxjs/operators';
 })
 export class ProductService {
   public products = new Array<Product>();
-  
+
   constructor(
     private firestore: AngularFirestore,
-  ) {}
+  ) { }
 
   // async getProducts() {
   //   return this.firestore.collection("products", ref => ref.orderBy("timestamp", "desc")).valueChanges();

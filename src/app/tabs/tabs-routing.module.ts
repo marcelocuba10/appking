@@ -20,10 +20,6 @@ const routes: Routes = [
         loadChildren: () => import('../pages/vendors/vendors.module').then(m => m.VendorsPageModule)
       },
       {
-        path: 'detail-product/:id',
-        loadChildren: () => import('../pages/detail-product/detail-product.module').then(m => m.DetailProductPageModule)
-      },
-      {
         path: 'orders',
         loadChildren: () => import('../pages/orders/orders.module').then(m => m.OrdersPageModule)
       },
@@ -34,6 +30,10 @@ const routes: Routes = [
       {
         path: 'customer',
         loadChildren: () => import('../pages/customer/customer.module').then(m => m.CustomerPageModule)
+      },
+      {
+        path: 'detail-product/:id',
+        loadChildren: () => import('../pages/detail-product/detail-product.module').then(m => m.DetailProductPageModule)
       },
       {
         path: 'detail-vendor/:id',
@@ -50,6 +50,10 @@ const routes: Routes = [
       {
         path: 'modal-detail/:id',
         loadChildren: () => import('../pages/modal-detail/modal-detail.module').then(m => m.ModalDetailPageModule)
+      },
+      {
+        path: 'detail-order/:id',
+        loadChildren: () => import('../pages/detail-order/detail-order.module').then(m => m.DetailOrderPageModule)
       },
       {
         path: '',
@@ -116,6 +120,11 @@ const routes: Routes = [
   {
     path: 'modal-detail/:id',
     redirectTo: '/tabs/modal-detail/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'detail-order/:id',
+    redirectTo: '/tabs/detail-order/:id',
     pathMatch: 'full'
   }
 ];

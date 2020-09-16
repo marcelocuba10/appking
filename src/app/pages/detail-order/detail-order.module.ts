@@ -6,9 +6,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DetailSalePageRoutingModule } from './detail-sale-routing.module';
+import { DetailOrderPageRoutingModule } from './detail-order-routing.module';
 
-import { DetailSalePage } from './detail-sale.page';
+import { DetailOrderPage } from './detail-order.page';
 
 @NgModule({
   entryComponents: [
@@ -18,9 +18,9 @@ import { DetailSalePage } from './detail-sale.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    DetailSalePageRoutingModule,
+    DetailOrderPageRoutingModule,
     ModalDetailPageModule
   ],
-  declarations: [DetailSalePage]
+  declarations: [DetailOrderPage]
 })
-export class DetailSalePageModule { }
+export class DetailOrderPageModule { }

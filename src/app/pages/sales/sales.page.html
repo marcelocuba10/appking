@@ -43,7 +43,7 @@
         <tr *ngFor="let sale of sales">
           <td>{{sale.nameCustomer}}</td>
           <td>{{sale.nameVendor}}</td>
-          <td>{{sale.total}}</td>
+          <td>{{sale.total | currency: 'GS '}}</td>
           <td>{{sale.date}}</td>
           <td>{{sale.observation}}</td>
           <td>

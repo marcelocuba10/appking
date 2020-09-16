@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar color="tertiary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/sales"></ion-back-button>
+      <ion-back-button defaultHref="/orders"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Detalle Venta</ion-title>
+    <ion-title class="ion-text-center">Detalle Pedido</ion-title>
     <ion-buttons slot="primary">
       <ion-button>
         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
@@ -38,28 +38,28 @@
   <ion-card>
     <ion-card-content>
       <h4>
-        <ion-icon name="bookmarks-outline"></ion-icon> Crear nueva venta
-        {{saleId}}
+        <ion-icon name="bookmarks-outline"></ion-icon> Crear nuevo pedido
+        {{idOrder}}
       </h4>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputPassword4">Cliente</label>
-          <input readonly *ngIf="!customers" [(ngModel)]="sale.nameCustomer" type="text" class="form-control">
-          <select *ngIf="customers" required class="form-control" [(ngModel)]="sale.idCustomer">
+          <input readonly *ngIf="!customers" [(ngModel)]="order.nameCustomer" type="text" class="form-control">
+          <select *ngIf="customers" required class="form-control" [(ngModel)]="order.idCustomer">
             <option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}</option>
           </select>
         </div>
         <div class="form-group col-md-6">
           <label for="inputPassword4">Vendedor</label>
-          <input readonly *ngIf="!vendors" [(ngModel)]="sale.nameVendor" type="text" class="form-control">
-          <select *ngIf="vendors" class="form-control" [(ngModel)]="sale.idVendor">
+          <input readonly *ngIf="!vendors" [(ngModel)]="order.nameVendor" type="text" class="form-control">
+          <select *ngIf="vendors" class="form-control" [(ngModel)]="order.idVendor">
             <option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</option>
           </select>
         </div>
       </div>
       <!-- <ion-item>
         <ion-label>Vendedor</ion-label>
-        <ion-select required [(ngModel)]="sale.idVendor" ok-text="Aceptar" cancel-text="Cancelar">
+        <ion-select required [(ngModel)]="order.idVendor" ok-text="Aceptar" cancel-text="Cancelar">
           <ion-select-option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}
           </ion-select-option>
         </ion-select>
@@ -67,8 +67,9 @@
 
       <div class="row">
         <div class="col-md-6">
-          <label for="exampleInputEmail1">Fecha de venta</label>
-          <input [(ngModel)]="sale.date" type="text" class="form-control" id="exampleInputEmail1">
+          <label for="exampleInputEmail1">Fecha de pedido</label>
+          <input [(ngModel)]="order.date" type="text" class="form-control" id="exampleInputEmail1"
+            aria-describedby="emailHelp">
         </div>
         <div class="col float-right">
           <ion-button class="ion-margin" color="success" (click)="presentModalDetail()">
@@ -91,7 +92,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let detail of details ">
-              <td>{{detail.idSale}}</td>
+              <td>{{detail.idOrder}}</td>
               <td>{{detail.nameProduct}}</td>
               <td>{{detail.volume}}</td>
               <td>{{detail.price}}</td>
@@ -114,18 +115,18 @@
         <div class="col-md-6">
           <label for="exampleFormControlTextarea1">Observación</label>
           <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
-            [(ngModel)]="sale.observation"></textarea>
+            [(ngModel)]="order.observation"></textarea>
         </div>
         <div class="col float-right">
-          <label class="font-price">{{sale.total | currency: 'GS '}}</label>
+          <label class="font-price">{{order.total | currency: 'GS '}}</label>
         </div>
       </div>
 
       <ion-item-group class="ion-text-center float-right">
-        <ion-button color="secondary" routerLink="/sales">
+        <ion-button color="secondary" routerLink="/orders">
           <ion-icon name="arrow-back-outline"></ion-icon>Volver
         </ion-button>
-        <ion-button color="success" (click)="saveSale(sale)">
+        <ion-button color="success" (click)="saveOrder(order)">
           <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
         </ion-button>
       </ion-item-group>

@@ -31,7 +31,6 @@
     <table class="table table-hover table-bordered table-striped">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Nombre</th>
           <th scope="col">Cantidad</th>
           <th scope="col">Volumen</th>
@@ -42,12 +41,11 @@
       </thead>
       <tbody>
         <tr *ngFor="let product of products">
-          <th scope="row">1</th>
           <td>{{product.name}}</td>
           <td>{{product.quantity}}</td>
           <td>{{product.volume}}</td>
-          <td>{{product.sale_price | currency: 'GS'}}</td>
-          <td>{{product.purchase_price | currency: 'GS'}}</td>
+          <td>{{product.sale_price | currency: 'GS '}}</td>
+          <td>{{product.purchase_price | currency: 'GS '}}</td>
           <td>
             <ion-button size="small" color="success" [routerLink]="['/detail-product/', product.id]">
               <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>

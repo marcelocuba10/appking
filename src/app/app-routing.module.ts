@@ -69,7 +69,11 @@ const routes: Routes = [
   {
     path: 'modal-detail/:id',
     loadChildren: () => import('./pages/modal-detail/modal-detail.module').then( m => m.ModalDetailPageModule)
+  },  {
+    path: 'detail-order',
+    loadChildren: () => import('./pages/detail-order/detail-order.module').then( m => m.DetailOrderPageModule)
   }
+
 ];
 @NgModule({
   imports: [

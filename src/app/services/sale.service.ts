@@ -9,7 +9,7 @@ export class SaleService {
   private sale = {} as Sale;
 
   constructor(
-    private firestore: AngularFirestore
+    private readonly firestore: AngularFirestore
   ) { }
 
   async getSaleById(id: string) {

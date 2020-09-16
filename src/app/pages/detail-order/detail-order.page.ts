@@ -1,42 +1,40 @@
 import { ItemDetailService } from './../../services/item-detail.service';
-import { Customer } from './../../models/customer';
 import { ModalDetailPage } from './../modal-detail/modal-detail.page';
-import { DetailSale } from './../../models/detail-sale';
-import { Product } from './../../models/product';
-import { Vendor } from './../../models/vendor';
-import { VendorService } from 'src/app/services/vendor.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { LoadingController, NavController, ModalController, AlertController } from '@ionic/angular';
-import { AppService } from './../../services/app.service';
-import { SaleService } from 'src/app/services/sale.service';
-import { CustomerService } from './../../services/customer.service';
+import { LoadingController, NavController, ModalController } from '@ionic/angular';
+import { AppService } from 'src/app/services/app.service';
+import { OrderService } from './../../services/order.service';
+import { VendorService } from 'src/app/services/vendor.service';
+import { CustomerService } from 'src/app/services/customer.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Vendor } from 'src/app/models/vendor';
+import { Customer } from 'src/app/models/customer';
+import { Product } from 'src/app/models/product';
+import { Order } from './../../models/order';
 import { Component, OnInit } from '@angular/core';
-import { Sale } from '../../models/sale';
+import { OrderDetail } from '../../models/order-detail';
 import * as moment from 'moment';
-import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-detail-sale',
-  templateUrl: './detail-sale.page.html',
-  styleUrls: ['./detail-sale.page.scss'],
+  selector: 'app-detail-order',
+  templateUrl: './detail-order.page.html',
+  styleUrls: ['./detail-order.page.scss'],
 })
-export class DetailSalePage implements OnInit {
-
-  public details = new Array<DetailSale>();
-  public sale = {} as Sale;
+export class DetailOrderPage implements OnInit {
+  public details = new Array<OrderDetail>();
+  public order = {} as Order;
   public product = {} as Product;
   private customer = {} as Customer;
   private vendor = {} as Vendor;
 
-  private detailSaleSubscription: Subscription;
-  private saleSubscription: Subscription;
+  private detailOrderSubscription: Subscription;
+  private orderSubscription: Subscription;
   private customerSubscription: Subscription;
   private vendorSubscription: Subscription;
 
   public customers: any;
-  public saleId: any;
+  public idOrder: any;
   public productId: any;
   public vendors: any;
   private loading: any;
@@ -45,32 +43,31 @@ export class DetailSalePage implements OnInit {
     private actRoute: ActivatedRoute,
     private customerService: CustomerService,
     private vendorService: VendorService,
-    private saleService: SaleService,
+    private orderService: OrderService,
     private appService: AppService,
     private loadingCtrl: LoadingController,
     private navCtrl: NavController,
     private readonly firestore: AngularFirestore,
     public modalCtrl: ModalController,
-    private ItemDetailService: ItemDetailService
+    private ItemDetailService: ItemDetailService,
   ) {
-    this.saleId = this.actRoute.snapshot.paramMap.get("id");
+    this.idOrder = this.actRoute.snapshot.paramMap.get("id");
   }
 
   ngOnInit() {
 
-    if (this.saleId) {
-      //show data sale
-      this.getSaleById();
-      this.getDetailsSale();
+    if (this.idOrder) {
+      //show data order
+      this.getOrderById();
+      this.getDetailsOrder();
     } else {
-      //new sale
-      this.saleId = this.firestore.createId();
+      //new order
+      this.idOrder = this.firestore.createId();
       this.getVendors();
       this.getCustomers();
     }
 
-    this.sale.date = moment().locale('es').format('L');
-
+    this.order.date = moment().locale('es').format('L');
   }
 
   async presentModalDetail() {
@@ -79,8 +76,8 @@ export class DetailSalePage implements OnInit {
       component: ModalDetailPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        'id': this.saleId,
-        'operation': "sale"
+        'id': this.idOrder,
+        'operation': "order"
       }
     });
 
@@ -89,18 +86,18 @@ export class DetailSalePage implements OnInit {
     //the data is an object that will allow me to work the info that comes from the modal-detail
     const { data } = await modal.onDidDismiss();
     //console.log("Return detail data: ", data); test
-    this.getDetailsSale();
+    this.getDetailsOrder();
 
   }
 
-  async presentModalDetailEdit(detail: DetailSale, id: string) {
+  async presentModalDetailEdit(detail: OrderDetail, id: string) {
 
     const modal = await this.modalCtrl.create({
       component: ModalDetailPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        'id': this.saleId,
-        'operation': "sale",
+        'id': this.idOrder,
+        'operation': "order",
         'detail': detail,
         'idDetail': id
       }
@@ -111,26 +108,25 @@ export class DetailSalePage implements OnInit {
     //the data is an object that will allow me to work the info that comes from the modal-detail
     const { data } = await modal.onDidDismiss();
     //console.log("Return detail data: ", data); test
-    this.getDetailsSale();
+    this.getDetailsOrder();
 
   }
 
-  async getSaleById() {
+  async getOrderById() {
 
-    this.saleSubscription = (await this.saleService.getSaleById(this.saleId)).subscribe(data => {
-      this.sale = data;
-    })
-
+    this.orderSubscription = (await this.orderService.getOrderById(this.idOrder)).subscribe(data => {
+      this.order = data;
+    });
   }
 
-  async getDetailsSale() {
+  async getDetailsOrder() {
 
-    this.detailSaleSubscription = this.firestore.collection("details-sale", ref => ref.where("idSale", "==", this.saleId)).snapshotChanges().subscribe(
+    this.detailOrderSubscription = this.firestore.collection("details-order", ref => ref.where("idOrder", "==", this.idOrder)).snapshotChanges().subscribe(
       data => {
         this.details = data.map(e => {
           return {
             id: e.payload.doc.id,
-            idSale: e.payload.doc.data()["idSale"],
+            idOrder: e.payload.doc.data()["idOrder"],
             idProduct: e.payload.doc.data()["idProduct"],
             nameProduct: e.payload.doc.data()["nameProduct"],
             quantity: e.payload.doc.data()["quantity"],
@@ -141,54 +137,38 @@ export class DetailSalePage implements OnInit {
         });
 
         let initialValue = 0;
-        this.sale.total = this.details.reduce(function (accumulator, currentValue) {
+        this.order.total = this.details.reduce(function (accumulator, currentValue) {
           return accumulator + currentValue.subtotal
         }, initialValue)
       });
 
   }
 
-  async saveSale() {
+  async saveOrder() {
 
     if (await this.formValidation() && this.getCustomerById() && this.getVendorById()) {
       await this.presentLoading();
-      this.sale.timestamp = Date.now();
-      this.sale.date = moment().locale('es').format('L');
-
-      //old process
-      // //search vendor name by vendorId
-      // for (let index = 0; index < this.details.length; index++) {
-      //   if (this.details[index].idSale == this.saleId) {
-      //     this.sale.total = this.details[index].subtotal;
-      //     break;
-      //   }
-      // }
-      //search customer name by customerId
-      // for (let index = 0; index < this.customers.length; index++) {
-      //   if (this.customers[index].id == this.sale.idCustomer) {
-      //     this.sale.nameCustomer = this.customers[index].name;
-      //     break;
-      //   }
-      // }
+      this.order.timestamp = Date.now();
+      this.order.date = moment().locale('es').format('L');
 
       try {
-        if (this.sale.observation == null) {
-          this.sale.observation = "";  //null error
+        if (this.order.observation == null) {
+          this.order.observation = "";  //null error
         }
 
-        this.firestore.collection("sales").doc(this.saleId.toString()).set({
-          idCustomer: this.sale.idCustomer,
-          nameCustomer: this.sale.nameCustomer,
-          idVendor: this.sale.idVendor,
-          nameVendor: this.sale.nameVendor,
-          total: this.sale.total,
-          date: this.sale.date,
+        this.firestore.collection("orders").doc(this.idOrder.toString()).set({
+          idCustomer: this.order.idCustomer,
+          nameCustomer: this.order.nameCustomer,
+          idVendor: this.order.idVendor,
+          nameVendor: this.order.nameVendor,
+          total: this.order.total,
+          date: this.order.date,
           timestamp: Date.now(),
-          observation: this.sale.observation
+          observation: this.order.observation
         });
-        //this.saleService.addSale(this.sale);
+
         this.loading.dismiss();
-        this.navCtrl.navigateRoot("sales");
+        this.navCtrl.navigateRoot("orders");
       } catch (error) {
         this.appService.presentToast(error);
         this.loading.dismiss();
@@ -201,10 +181,10 @@ export class DetailSalePage implements OnInit {
   async getCustomerById() {
 
     try {
-      this.customerSubscription = (await this.customerService.getCustomerByIdAux(this.sale.idCustomer)).subscribe(data => {
+      this.customerSubscription = (await this.customerService.getCustomerByIdAux(this.order.idCustomer)).subscribe(data => {
         this.customer = data;
-        this.sale.nameCustomer = this.customer.name;
-        console.log(this.sale.nameCustomer)
+        this.order.nameCustomer = this.customer.name;
+        console.log(this.order.nameCustomer)
         return true;
       })
     } catch (error) {
@@ -217,10 +197,10 @@ export class DetailSalePage implements OnInit {
   async getVendorById() {
 
     try {
-      this.customerSubscription = (await this.vendorService.getVendorByIdAux(this.sale.idVendor)).subscribe(data => {
+      this.customerSubscription = (await this.vendorService.getVendorByIdAux(this.order.idVendor)).subscribe(data => {
         this.vendor = data;
-        this.sale.nameVendor = this.vendor.name;
-        console.log(this.sale.nameVendor)
+        this.order.nameVendor = this.vendor.name;
+        console.log(this.order.nameVendor)
         return true;
       })
     } catch (error) {
@@ -233,7 +213,7 @@ export class DetailSalePage implements OnInit {
   async ConfirmDeleteDetail(id: string) {
 
     try {
-      await this.ItemDetailService.deleteDetailSale(id);
+      await this.ItemDetailService.deleteDetailOrder(id);
     } catch (error) {
       this.appService.presentToast(error);
     }
@@ -278,16 +258,16 @@ export class DetailSalePage implements OnInit {
 
   async formValidation() {
 
-    if (!this.sale.idCustomer) {
+    if (!this.order.idCustomer) {
       this.appService.presentAlert("Ingrese un Cliente");
       return false;
     }
-    if (!this.sale.idVendor) {
+    if (!this.order.idVendor) {
       this.appService.presentAlert("Ingrese un Vendedor");
       return false;
     }
     if (this.details.length == 0) {
-      this.appService.presentAlert("Ingrese un item para la venta");
+      this.appService.presentAlert("Ingrese un item para el pedido");
       return false;
     }
     return true;
@@ -303,12 +283,11 @@ export class DetailSalePage implements OnInit {
 
   ngDestroy() {
 
-    this.saleSubscription.unsubscribe();
+    this.orderSubscription.unsubscribe();
     this.vendorSubscription.unsubscribe();
     this.customerSubscription.unsubscribe();
-    this.detailSaleSubscription.unsubscribe();
+    this.detailOrderSubscription.unsubscribe();
 
   }
-
 
 }

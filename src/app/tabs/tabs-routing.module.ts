@@ -17,35 +17,39 @@ const routes: Routes = [
       },
       {
         path: 'vendors',
-        loadChildren: () => import('../pages/vendors/vendors.module').then( m => m.VendorsPageModule)
+        loadChildren: () => import('../pages/vendors/vendors.module').then(m => m.VendorsPageModule)
       },
       {
         path: 'detail-product/:id',
-        loadChildren: () => import('../pages/detail-product/detail-product.module').then( m => m.DetailProductPageModule)
+        loadChildren: () => import('../pages/detail-product/detail-product.module').then(m => m.DetailProductPageModule)
       },
       {
         path: 'orders',
-        loadChildren: () => import('../pages/orders/orders.module').then( m => m.OrdersPageModule)
+        loadChildren: () => import('../pages/orders/orders.module').then(m => m.OrdersPageModule)
       },
       {
         path: 'sales',
-        loadChildren: () => import('../pages/sales/sales.module').then( m => m.SalesPageModule)
+        loadChildren: () => import('../pages/sales/sales.module').then(m => m.SalesPageModule)
       },
       {
         path: 'customer',
-        loadChildren: () => import('../pages/customer/customer.module').then( m => m.CustomerPageModule)
+        loadChildren: () => import('../pages/customer/customer.module').then(m => m.CustomerPageModule)
       },
       {
         path: 'detail-vendor/:id',
-        loadChildren: () => import('../pages/detail-vendor/detail-vendor.module').then( m => m.DetailVendorPageModule)
+        loadChildren: () => import('../pages/detail-vendor/detail-vendor.module').then(m => m.DetailVendorPageModule)
       },
       {
         path: 'detail-customer/:id',
-        loadChildren: () => import('../pages/detail-customer/detail-customer.module').then( m => m.DetailCustomerPageModule)
+        loadChildren: () => import('../pages/detail-customer/detail-customer.module').then(m => m.DetailCustomerPageModule)
       },
       {
         path: 'detail-sale/:id',
-        loadChildren: () => import('../pages/detail-sale/detail-sale.module').then( m => m.DetailSalePageModule)
+        loadChildren: () => import('../pages/detail-sale/detail-sale.module').then(m => m.DetailSalePageModule)
+      },
+      {
+        path: 'modal-detail/:id',
+        loadChildren: () => import('../pages/modal-detail/modal-detail.module').then(m => m.ModalDetailPageModule)
       },
       {
         path: '',
@@ -75,11 +79,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'detail-product/:id',
-    redirectTo: '/tabs/detail-product/:id',
-    pathMatch: 'full'
-  },
-  {
     path: 'vendors',
     redirectTo: '/tabs/vendors',
     pathMatch: 'full'
@@ -105,8 +104,18 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'detail-product/:id',
+    redirectTo: '/tabs/detail-product/:id',
+    pathMatch: 'full'
+  },
+  {
     path: 'detail-sale/:id',
     redirectTo: '/tabs/detail-sale/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'modal-detail/:id',
+    redirectTo: '/tabs/modal-detail/:id',
     pathMatch: 'full'
   }
 ];
@@ -115,4 +124,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

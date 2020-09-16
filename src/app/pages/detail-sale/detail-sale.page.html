@@ -99,6 +99,9 @@
               <td>{{detail.quantity}}</td>
               <td>{{detail.subtotal}}</td>
               <td>
+                <ion-button size="small" color="success" (click)="presentModalDetailEdit(detail,detail.id)">
+                  <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>
+                </ion-button>
                 <ion-button size="small" color="danger" (click)="ConfirmDeleteDetail(detail.id)">
                   <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
                 </ion-button>

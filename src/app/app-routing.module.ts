@@ -65,11 +65,11 @@ const routes: Routes = [
   {
     path: 'modal-detail',
     loadChildren: () => import('./pages/modal-detail/modal-detail.module').then( m => m.ModalDetailPageModule)
+  },
+  {
+    path: 'modal-detail/:id',
+    loadChildren: () => import('./pages/modal-detail/modal-detail.module').then( m => m.ModalDetailPageModule)
   }
-
-
-
-
 ];
 @NgModule({
   imports: [

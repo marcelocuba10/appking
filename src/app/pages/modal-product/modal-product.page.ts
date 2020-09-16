@@ -15,7 +15,7 @@ export class ModalProductPage implements OnInit {
   public products = new Array<Product>();
   private productsSubcription: Subscription;
 
-  // Data passed in by componentProps
+  // Data passed in by modal-detail
   @Input() saleId: string;
 
   constructor(

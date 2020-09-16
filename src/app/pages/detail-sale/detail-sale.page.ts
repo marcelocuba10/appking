@@ -93,6 +93,27 @@ export class DetailSalePage implements OnInit {
 
   }
 
+  async presentModalDetailEdit(detail: DetailSale, id: string) {
+
+    const modal = await this.modalCtrl.create({
+      component: ModalDetailPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        'saleId': this.saleId,
+        'detail': detail,
+        'detailId': id
+      }
+    });
+
+    await modal.present();
+
+    //the data is an object that will allow me to work the info that comes from the modal-detail
+    const { data } = await modal.onDidDismiss();
+    //console.log("Return detail data: ", data); test
+    this.getDetailsSale();
+
+  }
+
   async getSaleById() {
 
     this.saleSubscription = (await this.saleService.getSaleById(this.saleId)).subscribe(data => {

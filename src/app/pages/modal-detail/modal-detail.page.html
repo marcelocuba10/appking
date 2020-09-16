@@ -18,15 +18,15 @@
   <ion-grid>
     <ion-row class="ion-text-center">
       <ion-col size="12">
-        <ion-button style="display: revert;" size="large" color="success" (click)="presentModalProduct()">
-          <ion-icon name="cube-outline"></ion-icon>Agregar Producto
+        <ion-button size="large" color="success" (click)="presentModalProduct()">
+          <ion-icon name="add-circle-outline"></ion-icon> Agregar Producto
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-card>
     <ion-card-header>
-      <ion-card-subtitle>Nro de Item: {{saleId}}</ion-card-subtitle>
+      <ion-card-subtitle>Código Venta: {{saleId}}</ion-card-subtitle>
       <ion-card-title>{{detailSale.nameProduct}}</ion-card-title>
     </ion-card-header>
     <ion-card-content *ngIf="detailSale.idProduct">
@@ -44,7 +44,7 @@
             <div class="input-prepend" (click)="increaseQuantity()">
               <ion-icon name="add-outline"></ion-icon>
             </div>
-            <ion-input class="input-quantity" type="number" [(ngModel)]="detailSale.quantity"></ion-input>
+            <ion-input readonly class="input-quantity" type="number" [(ngModel)]="detailSale.quantity"></ion-input>
             <div class="input-prepend" (click)="decreaseQuantity()">
               <ion-icon name="remove-outline"></ion-icon>
             </div>

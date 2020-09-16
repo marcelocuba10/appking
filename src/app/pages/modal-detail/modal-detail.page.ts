@@ -1,3 +1,5 @@
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ProductService } from './../../services/product.service';
 import { AppService } from 'src/app/services/app.service';
@@ -14,12 +16,19 @@ import { ModalProductPage } from '../modal-product/modal-product.page';
   styleUrls: ['./modal-detail.page.scss'],
 })
 export class ModalDetailPage implements OnInit {
-
+  // Data passed in by modal-detail
   @Input() saleId: string;
+  @Input() detail = {} as DetailSale;
+  @Input() detailId: string;
+
   public detailSale = {} as DetailSale;
   public product = {} as Product;
   private loading: any;
   public tokenDetail: boolean = false;
+  private detailSaleId: any;
+
+  private DetailSubscription: Subscription;
+  private ProductSubscription: Subscription;
   //public contentOrderBy: DetailSale[];
 
   constructor(
@@ -28,10 +37,20 @@ export class ModalDetailPage implements OnInit {
     private appService: AppService,
     private loadingCtrl: LoadingController,
     private productService: ProductService,
-    private readonly firestore: AngularFirestore
-  ) { }
+    private readonly firestore: AngularFirestore,
+    private actRoute: ActivatedRoute
+  ) {
+    //this.detailSaleId = this.actRoute.snapshot.paramMap.get("id");
+  }
 
   ngOnInit() {
+
+    if (this.detailId) {
+      //show data detail
+      this.detailSale = this.detail;
+      this.getProductById();
+    }
+
   }
 
   async presentModalProduct() {
@@ -56,12 +75,12 @@ export class ModalDetailPage implements OnInit {
     this.detailSale.volume = data.volume;
 
     //info product extra
+    this.product.image = data.image;
+    this.product.quantity = data.quantity; //calculate stock
     this.product.purchase_price = data.purchase_price;
     this.product.category = data.category;
-    this.product.quantity = data.quantity; //calculate stock
     this.product.created = data.created;
     this.product.timestamp = data.timestamp;
-    this.product.image = data.image;
 
     //test
     // this.contentOrderBy = [{
@@ -76,35 +95,66 @@ export class ModalDetailPage implements OnInit {
 
   }
 
+  async getProductById() {
+    this.ProductSubscription = (await this.productService.getProductById(this.detail.idProduct)).valueChanges().subscribe(data => {
+      this.product = data;
+    })
+  }
+
   async saveDetailSale() {
 
     if (await this.formValidation()) {
       await this.presentLoading();
+
       //add detail-sale
-      try {
+      if (this.detailId) {
+        //update detail
+        try {
+          //this.detailSaleService.updateDetail(this.detailSaleId, this.detailSale);
+          this.firestore.collection("details-sale").doc(this.detailId).set({
+            idSale: this.saleId,
+            idProduct: this.detailSale.idProduct,
+            nameProduct: this.detailSale.nameProduct,
+            quantity: this.detailSale.quantity, //quantity detail updated
+            price: this.detailSale.price,
+            volume: this.detailSale.volume,
+            subtotal: this.detailSale.subtotal
+          });
 
-        this.detailSale.idSale = this.saleId.toString();
-        console.log(this.saleId)
-        this.detailSaleService.addDetailsSale(this.detailSale);
+          this.loading.dismiss();
+          this.modalCtrl.dismiss();
+        } catch (error) {
+          this.appService.presentToast(error);
+          this.loading.dismiss();
+          console.log(error);
+        }
+      } else {
+        //create detail
+        try {
+          this.detailSale.idSale = this.saleId;
+          this.detailSaleService.addDetail(this.detailSale);
 
-        this.firestore.collection("products").doc(this.detailSale.idProduct).set({
-          name: this.detailSale.nameProduct,
-          sale_price: this.detailSale.price,
-          purchase_price: this.product.purchase_price,
-          category: this.product.category,
-          volume: this.detailSale.volume,
-          quantity: this.product.quantity, //stock product updated
-          created: this.product.created,
-          timestamp: this.product.timestamp,
-          image: this.product.image
-        });
-        //this.modalCtrl.dismiss(this.contentOrderBy); send data local, test
-        this.loading.dismiss();
-        this.modalCtrl.dismiss();
-      } catch (error) {
-        this.appService.presentToast(error);
-        this.loading.dismiss();
-        console.log(error);
+          //discount stock product
+          this.firestore.collection("products").doc(this.detailSale.idProduct).set({
+            name: this.detailSale.nameProduct,
+            sale_price: this.detailSale.price,
+            purchase_price: this.product.purchase_price,
+            category: this.product.category,
+            volume: this.detailSale.volume,
+            quantity: this.product.quantity, //stock product updated
+            created: this.product.created,
+            timestamp: this.product.timestamp,
+            image: this.product.image
+          });
+
+          //this.modalCtrl.dismiss(this.contentOrderBy); send data local, test
+          this.loading.dismiss();
+          this.modalCtrl.dismiss();
+        } catch (error) {
+          this.appService.presentToast(error);
+          this.loading.dismiss();
+          console.log(error);
+        }
       }
     }
 
@@ -126,6 +176,10 @@ export class ModalDetailPage implements OnInit {
       this.appService.presentAlert("Ingrese un producto");
       return false;
     }
+    if (this.detailSale.quantity == 0) {
+      this.appService.presentAlert("Ingrese una cantidad");
+      return false;
+    }
     return true;
 
   }
@@ -143,7 +197,6 @@ export class ModalDetailPage implements OnInit {
       this.detailSale.quantity -= 1;
       this.detailSale.subtotal = this.detailSale.price * this.detailSale.quantity;
       this.product.quantity += 1;
-      console.log(this.detailSale.quantity);
     } else {
       return;
     }
@@ -152,10 +205,13 @@ export class ModalDetailPage implements OnInit {
 
   increaseQuantity() {
 
-    this.detailSale.quantity += 1;
-    this.detailSale.subtotal = this.detailSale.price * this.detailSale.quantity;
-    this.product.quantity -= 1;
-
+    if (this.product.quantity != 0) {
+      this.detailSale.quantity += 1;
+      this.detailSale.subtotal = this.detailSale.price * this.detailSale.quantity;
+      this.product.quantity -= 1;
+    } else {
+      return;
+    }
   }
 
 

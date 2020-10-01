@@ -10,8 +10,85 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 </ion-header>
 
 <ion-content>
+
+  <div style="background: linear-gradient(0deg, #c85b28 0%, #d19334c9 17%, #4fccc4 92%);; height:30%;text-align: center;height: auto;">
+    <img src="https://lh3.googleusercontent.com/proxy/EgBW4utaG5baSk_uJumk1qzcyBhHEp43HOcWmPxMIJBpVmzoXgbBt_qbJuG4-tWOb5Xdx_V276nGGqQnXgxl8ypaC35uA130-nuzlS-6Nv-AUlKlhw" class="img-fluid" alt="Responsive image">
+  </div>
+  <ion-grid style="background-color: #E5E5E5;">
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="ion-text-center">
+          <ion-card-header>
+            <ion-card-subtitle>Pedidos pendientes</ion-card-subtitle>
+            <ion-card-title>20</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-button size="small" color="warning" routerLink="/orders">Ver pedidos</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="ion-text-center">
+          <ion-card-header>
+            <ion-card-subtitle>Productos a preparar</ion-card-subtitle>
+            <ion-card-title>50</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-button size="small" color="warning" routerLink="/product">Ver productos</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="ion-text-center">
+          <ion-card-header>
+            <ion-card-subtitle>Capital previsto / pedidos</ion-card-subtitle>
+            <ion-card-title>GS 150,000</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-button size="small" color="warning">Ver pedidos</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="ion-text-center">
+          <ion-card-header>
+            <ion-card-subtitle>Ganancia prevista / pedidos</ion-card-subtitle>
+            <ion-card-title>GS 400,000</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-button size="small" color="warning">Ver pedidos</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>

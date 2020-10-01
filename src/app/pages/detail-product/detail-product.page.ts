@@ -30,7 +30,6 @@ export class DetailProductPage implements OnInit {
   ) {
     //captura el ID
     this.productId = this.actRoute.snapshot.paramMap.get("id");
-    console.log(this.productId);
   }
 
   ngOnInit() {

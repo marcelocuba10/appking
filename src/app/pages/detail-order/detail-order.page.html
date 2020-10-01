@@ -90,7 +90,6 @@
         <table id="myTable" class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th scope="col">Codigo</th>
               <th scope="col">Descripcion</th>
               <th scope="col">Volumen</th>
               <th scope="col">Precio</th>
@@ -101,7 +100,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let detail of details ">
-              <td>{{detail.idProduct}}</td>
               <td>{{detail.nameProduct}}</td>
               <td>{{detail.volume}}</td>
               <td>{{detail.price}}</td>

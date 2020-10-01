@@ -17,6 +17,9 @@
 <ion-content>
 
   <ion-card>
+    <div style="text-align:center">
+      <img *ngIf="productId" src="{{product.image}}"/>
+    </div>
     <ion-card-content>
       <ion-item>
         <ion-label position="floating">Nombre</ion-label>
@@ -36,7 +39,7 @@
           <ion-select-option value="500ml">500 ml</ion-select-option>
           <ion-select-option value="1Litro">1 Litro</ion-select-option>
           <ion-select-option value="2Litros">2 Litros</ion-select-option>
-          <ion-select-option value="5Litros">3 Litros</ion-select-option>
+          <ion-select-option value="5Litros">5 Litros</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>

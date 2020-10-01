@@ -16,6 +16,7 @@ import { Component, OnInit } from '@angular/core';
 import { Sale } from '../../models/sale';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-detail-sale',
@@ -40,6 +41,7 @@ export class DetailSalePage implements OnInit {
   public productId: any;
   public vendors: any;
   private loading: any;
+  private isExisting: boolean;
 
   constructor(
     private actRoute: ActivatedRoute,
@@ -59,14 +61,16 @@ export class DetailSalePage implements OnInit {
   ngOnInit() {
 
     if (this.saleId) {
-      //show data sale
+      //show data sale existing
       this.getSaleById();
       this.getDetailsSale();
+      this.isExisting = true;
     } else {
       //new sale
       this.saleId = this.firestore.createId();
       this.getVendors();
       this.getCustomers();
+      this.isExisting = false;
     }
 
     this.sale.date = moment().locale('es').format('L');
@@ -112,6 +116,32 @@ export class DetailSalePage implements OnInit {
     const { data } = await modal.onDidDismiss();
     //console.log("Return detail data: ", data); test
     this.getDetailsSale();
+
+  }
+
+  async undoSale(){
+
+    if (this.isExisting) {
+      return;
+    } else {
+      let fs = firebase.firestore();
+      let collectionRef = fs.collection("details-sale");
+
+      collectionRef.where("idSale", "==", this.saleId)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach((doc) => {
+            doc.ref.delete().then(() => {
+              console.log("Document successfully deleted!");
+            }).catch(function (error) {
+              console.error("Error removing document: ", error);
+            });
+          });
+        })
+        .catch(function (error) {
+          console.log("Error getting documents: ", error);
+        });
+    }
 
   }
 

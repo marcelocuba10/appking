@@ -24,6 +24,10 @@ export class ProductService {
     return this.firestore.doc("products/" + id);
   }
 
+  async getProductByIdV(id: string) {
+    return this.firestore.doc("products/" + id).valueChanges();
+  }
+
   async addProduct(product: Product) {
     return this.firestore.collection("products").add(product);
   }

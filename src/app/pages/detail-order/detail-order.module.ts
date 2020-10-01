@@ -3,6 +3,7 @@ import { ModalDetailPage } from './../modal-detail/modal-detail.page';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MbscModule } from '@mobiscroll/angular';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -19,7 +20,8 @@ import { DetailOrderPage } from './detail-order.page';
     FormsModule,
     IonicModule,
     DetailOrderPageRoutingModule,
-    ModalDetailPageModule
+    ModalDetailPageModule,
+    MbscModule, // add the mobiscroll module
   ],
   declarations: [DetailOrderPage]
 })

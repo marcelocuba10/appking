@@ -5,6 +5,7 @@ export interface Order {
     nameVendor?: string;
     total?: number;
     date?: string;
+    status?:string;
     observation?: string;
     timestamp?: number;
 }

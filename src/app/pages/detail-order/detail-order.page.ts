@@ -1,3 +1,4 @@
+import { ProductService } from './../../services/product.service';
 import { ItemDetailService } from './../../services/item-detail.service';
 import { ModalDetailPage } from './../modal-detail/modal-detail.page';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -15,6 +16,8 @@ import { Order } from './../../models/order';
 import { Component, OnInit } from '@angular/core';
 import { OrderDetail } from '../../models/order-detail';
 import * as moment from 'moment';
+import * as firebase from 'firebase';
+import { fsync } from 'fs';
 
 @Component({
   selector: 'app-detail-order',
@@ -23,8 +26,10 @@ import * as moment from 'moment';
 })
 export class DetailOrderPage implements OnInit {
   public details = new Array<OrderDetail>();
+  public products = new Array<Product>();
+
   public order = {} as Order;
-  public product = {} as Product;
+  //private product = {} as Product;
   private customer = {} as Customer;
   private vendor = {} as Vendor;
 
@@ -32,12 +37,23 @@ export class DetailOrderPage implements OnInit {
   private orderSubscription: Subscription;
   private customerSubscription: Subscription;
   private vendorSubscription: Subscription;
+  private productSubscription: Subscription;
 
   public customers: any;
   public idOrder: any;
-  public productId: any;
+  private productId: any;
   public vendors: any;
   private loading: any;
+  private stockProduct: number;
+  private quantityProduct: number;
+
+  public btnActions: boolean;
+  public actionTitle: string;
+  public btnCancelled: boolean;
+  public btnItem: boolean;
+  public btnSave: boolean;
+  public observation: boolean = false;
+  private isExisting: boolean;
 
   constructor(
     private actRoute: ActivatedRoute,
@@ -50,6 +66,7 @@ export class DetailOrderPage implements OnInit {
     private readonly firestore: AngularFirestore,
     public modalCtrl: ModalController,
     private ItemDetailService: ItemDetailService,
+    private productService: ProductService
   ) {
     this.idOrder = this.actRoute.snapshot.paramMap.get("id");
   }
@@ -57,36 +74,57 @@ export class DetailOrderPage implements OnInit {
   ngOnInit() {
 
     if (this.idOrder) {
-      //show data order
+      //show data order existing
       this.getOrderById();
       this.getDetailsOrder();
+
+      //to remove item detail if the operation is exited
+      this.isExisting = true;
+      this.observation = false;
+
     } else {
       //new order
       this.idOrder = this.firestore.createId();
       this.getVendors();
       this.getCustomers();
+
+      this.order.status = "Pendiente";
+      this.btnActions = false;
+      this.btnSave = false;
+      this.btnCancelled = true;
+      this.actionTitle = "Agregar Item";
+      this.observation = true;
+
+      this.order.date = moment().locale('es').format('L');
+
+      //to remove item detail if the operation is exited
+      this.isExisting = false;
     }
 
-    this.order.date = moment().locale('es').format('L');
   }
 
-  async presentModalDetail() {
+  async addOrProcess() {
 
-    const modal = await this.modalCtrl.create({
-      component: ModalDetailPage,
-      cssClass: 'my-custom-class',
-      componentProps: {
-        'id': this.idOrder,
-        'operation': "order"
-      }
-    });
+    if (this.actionTitle == "Procesar Pedido") {
+      this.processOrder();
+    } else {
+      //present Modal Detail
+      const modal = await this.modalCtrl.create({
+        component: ModalDetailPage,
+        cssClass: 'my-custom-class',
+        componentProps: {
+          'id': this.idOrder,
+          'operation': "order"
+        }
+      });
 
-    await modal.present();
+      await modal.present();
 
-    //the data is an object that will allow me to work the info that comes from the modal-detail
-    const { data } = await modal.onDidDismiss();
-    //console.log("Return detail data: ", data); test
-    this.getDetailsOrder();
+      //the data is an object that will allow me to work the info that comes from the modal-detail
+      const { data } = await modal.onDidDismiss();
+      //console.log("Return detail data: ", data); test
+      this.getDetailsOrder();
+    }
 
   }
 
@@ -116,7 +154,70 @@ export class DetailOrderPage implements OnInit {
 
     this.orderSubscription = (await this.orderService.getOrderById(this.idOrder)).subscribe(data => {
       this.order = data;
+
+      if (this.order.status == "Pendiente") {
+        this.actionTitle = "Procesar Pedido";
+        this.btnActions = false;
+        this.btnSave = true;
+        this.btnItem = true;
+      }
+      if (this.order.status == "Entregado") {
+        this.actionTitle = "Procesar Pedido";
+        this.btnActions = true;
+        this.btnCancelled = true;
+        this.btnItem = true;
+        this.btnSave = true;
+      }
+      if (this.order.status == "Cancelado") {
+        this.actionTitle = "Procesar Pedido";
+        this.btnActions = true;
+        this.btnCancelled = true;
+        this.btnItem = true;
+        this.btnSave = true;
+      }
     });
+
+  }
+
+  async cancelOrder() {
+
+    this.order.status = "Cancelado";
+    this.observation = true; //enable the observation box
+    this.btnSave = false;
+
+  }
+
+  async processOrder() {
+
+    this.order.status = "Entregado";
+    this.btnSave = false;
+
+  }
+
+  async undoOrder() {
+
+    if (this.isExisting) {
+      return;
+    } else {
+      let fs = firebase.firestore();
+      let collectionRef = fs.collection("details-order");
+
+      collectionRef.where("idOrder", "==", this.idOrder)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach((doc) => {
+            doc.ref.delete().then(() => {
+              console.log("Document successfully deleted!");
+            }).catch(function (error) {
+              console.error("Error removing document: ", error);
+            });
+          });
+        })
+        .catch(function (error) {
+          console.log("Error getting documents: ", error);
+        });
+    }
+
   }
 
   async getDetailsOrder() {
@@ -144,6 +245,59 @@ export class DetailOrderPage implements OnInit {
 
   }
 
+  async discountProduct() {
+    //while idOrder in detail == idOrder, discount product producti.quantity - detail.quantity
+    let fs = firebase.firestore();
+    let c = 1;
+
+    let collectionRef = fs.collection("details-order");
+    //let collectionRefproduct = fs.collection("products");
+    collectionRef.where("idOrder", "==", this.idOrder)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(async (doc) => {
+
+          this.productId = doc.data()["idProduct"] //for search
+          this.quantityProduct = doc.data()["quantity"] //for discount
+
+
+          //search ID product
+          this.productSubscription = (await this.productService.getProductByIdV(this.productId)).subscribe(data => {
+            this.stockProduct = data["quantity"];
+
+            if (c == 1) {
+              c++;
+              this.firestore.collection("products").doc(this.productId).set({
+
+                name: data["name"],
+                category: data["category"],
+                created: data["created"],
+                purchase_price: data["purchase_price"],
+                sale_price: data["sale_price"],
+                volume: data["volume"],
+                image: data["image"],
+                timestamp: data["timestamp"],
+                quantity: this.stockProduct - this.quantityProduct
+              });
+
+              console.log("stock: " + this.stockProduct);
+              console.log("quantity: " + this.quantityProduct);
+            }
+
+            console.log("out if");
+          });
+
+          console.log("out search idproduct");
+        });
+      })
+      .catch(function (error) {
+        console.log("Error getting documents: ", error);
+      });
+
+    return;
+
+  }
+
   async saveOrder() {
 
     if (await this.formValidation() && this.getCustomerById() && this.getVendorById()) {
@@ -156,6 +310,10 @@ export class DetailOrderPage implements OnInit {
           this.order.observation = "";  //null error
         }
 
+        if (this.order.status == "Entregado") {
+          this.discountProduct();
+        }
+
         this.firestore.collection("orders").doc(this.idOrder.toString()).set({
           idCustomer: this.order.idCustomer,
           nameCustomer: this.order.nameCustomer,
@@ -163,11 +321,13 @@ export class DetailOrderPage implements OnInit {
           nameVendor: this.order.nameVendor,
           total: this.order.total,
           date: this.order.date,
+          status: this.order.status,
           timestamp: Date.now(),
           observation: this.order.observation
         });
 
         this.loading.dismiss();
+        this.appService.presentToast("Pedido Procesado con Exito!")
         this.navCtrl.navigateRoot("orders");
       } catch (error) {
         this.appService.presentToast(error);
@@ -287,6 +447,7 @@ export class DetailOrderPage implements OnInit {
     this.vendorSubscription.unsubscribe();
     this.customerSubscription.unsubscribe();
     this.detailOrderSubscription.unsubscribe();
+    this.productSubscription.unsubscribe();
 
   }
 

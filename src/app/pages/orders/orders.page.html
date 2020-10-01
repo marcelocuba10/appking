@@ -33,6 +33,7 @@
         <tr>
           <th scope="col">Cliente</th>
           <th scope="col">Vendedor</th>
+          <th scope="col">Estado</th>
           <th scope="col">Total</th>
           <th scope="col">Fecha</th>
           <th scope="col">Observacion</th>
@@ -43,6 +44,11 @@
         <tr *ngFor="let order of orders">
           <td>{{order.nameCustomer}}</td>
           <td>{{order.nameVendor}}</td>
+          <td [ngClass]="{
+    'text-success':order.status === 'Entregado',
+    'text-primary':order.status === 'Pendiente',
+    'text-danger':order.status === 'Cancelado'
+  }">{{order.status}}</td>
           <td>{{order.total | currency: 'GS '}}</td>
           <td>{{order.date}}</td>
           <td>{{order.observation}}</td>

@@ -36,7 +36,15 @@ const routes: Routes = [
         loadChildren: () => import('../pages/detail-product/detail-product.module').then(m => m.DetailProductPageModule)
       },
       {
+        path: 'detail-product',
+        loadChildren: () => import('../pages/detail-product/detail-product.module').then(m => m.DetailProductPageModule)
+      },
+      {
         path: 'detail-vendor/:id',
+        loadChildren: () => import('../pages/detail-vendor/detail-vendor.module').then(m => m.DetailVendorPageModule)
+      },
+      {
+        path: 'detail-vendor',
         loadChildren: () => import('../pages/detail-vendor/detail-vendor.module').then(m => m.DetailVendorPageModule)
       },
       {
@@ -44,7 +52,15 @@ const routes: Routes = [
         loadChildren: () => import('../pages/detail-customer/detail-customer.module').then(m => m.DetailCustomerPageModule)
       },
       {
+        path: 'detail-customer',
+        loadChildren: () => import('../pages/detail-customer/detail-customer.module').then(m => m.DetailCustomerPageModule)
+      },
+      {
         path: 'detail-sale/:id',
+        loadChildren: () => import('../pages/detail-sale/detail-sale.module').then(m => m.DetailSalePageModule)
+      },
+      {
+        path: 'detail-sale',
         loadChildren: () => import('../pages/detail-sale/detail-sale.module').then(m => m.DetailSalePageModule)
       },
       {
@@ -53,6 +69,10 @@ const routes: Routes = [
       },
       {
         path: 'detail-order/:id',
+        loadChildren: () => import('../pages/detail-order/detail-order.module').then(m => m.DetailOrderPageModule)
+      },
+      {
+        path: 'detail-order',
         loadChildren: () => import('../pages/detail-order/detail-order.module').then(m => m.DetailOrderPageModule)
       },
       {
@@ -103,8 +123,18 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'detail-vendor',
+    redirectTo: '/tabs/detail-vendor',
+    pathMatch: 'full'
+  },
+  {
     path: 'detail-customer/:id',
     redirectTo: '/tabs/detail-customer/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'detail-customer',
+    redirectTo: '/tabs/detail-customer',
     pathMatch: 'full'
   },
   {
@@ -113,8 +143,18 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'detail-product',
+    redirectTo: '/tabs/detail-product',
+    pathMatch: 'full'
+  },
+  {
     path: 'detail-sale/:id',
     redirectTo: '/tabs/detail-sale/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'detail-sale',
+    redirectTo: '/tabs/detail-sale',
     pathMatch: 'full'
   },
   {
@@ -125,6 +165,11 @@ const routes: Routes = [
   {
     path: 'detail-order/:id',
     redirectTo: '/tabs/detail-order/:id',
+    pathMatch: 'full'
+  },
+  {
+    path: 'detail-order',
+    redirectTo: '/tabs/detail-order',
     pathMatch: 'full'
   }
 ];

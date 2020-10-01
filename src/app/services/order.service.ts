@@ -13,6 +13,7 @@ export class OrderService {
   ) { }
 
   async getOrderById(id: string) {
+    console.log(id);
     return this.firestore.doc("orders/" + id).valueChanges();
   }
 
@@ -22,6 +23,10 @@ export class OrderService {
 
   async deleteOrder(id:string){
     this.firestore.doc("orders/" + id).delete();
+  }
+
+  async updateOrder(id: string, order: Order) {
+    return this.firestore.doc("orders/" + id).update(order);
   }
 
 }

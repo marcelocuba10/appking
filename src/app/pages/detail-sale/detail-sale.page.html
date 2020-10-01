@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="tertiary">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" (click)="undoSale()">
       <ion-back-button defaultHref="/sales"></ion-back-button>
     </ion-buttons>
     <ion-title class="ion-text-center">Detalle Venta</ion-title>
@@ -36,11 +36,13 @@
 
 <ion-content>
   <ion-card>
-    <ion-card-content>
-      <h4>
-        <ion-icon name="bookmarks-outline"></ion-icon> Crear nueva venta
+      <ion-card-header>
+      <ion-card-subtitle>
+        <ion-icon name="bookmarks-outline"></ion-icon> Cod. Venta: 
         {{saleId}}
-      </h4>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputPassword4">Cliente</label>
@@ -122,7 +124,7 @@
       </div>
 
       <ion-item-group class="ion-text-center float-right">
-        <ion-button color="secondary" routerLink="/sales">
+        <ion-button color="secondary" routerLink="/sales" (click)="undoSale()">
           <ion-icon name="arrow-back-outline"></ion-icon>Volver
         </ion-button>
         <ion-button color="success" (click)="saveSale(sale)">

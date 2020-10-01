@@ -96,6 +96,7 @@ export class ModalDetailPage implements OnInit {
   async getProductById() {
     this.ProductSubscription = (await this.productService.getProductById(this.itemDetail.idProduct)).valueChanges().subscribe(data => {
       this.product = data;
+      this.product.quantity -= this.itemDetail.quantity;
     })
   }
 
@@ -183,7 +184,7 @@ export class ModalDetailPage implements OnInit {
         }
 
         if (this.operation == "order") {
-          //create detail order
+          //create detail order, not discount stock product
           try {
             this.detailOrder = this.itemDetail;
             this.detailOrder.idOrder = this.id;

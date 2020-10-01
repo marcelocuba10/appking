@@ -36,6 +36,7 @@ export class OrdersPage implements OnInit {
             nameVendor: e.payload.doc.data()["nameVendor"],
             total: e.payload.doc.data()["total"],
             date: e.payload.doc.data()["date"],
+            status: e.payload.doc.data()["status"],
             observation: e.payload.doc.data()["observation"]
           }
         })

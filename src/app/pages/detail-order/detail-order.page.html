@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="tertiary">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" (click)="undoOrder()">
       <ion-back-button defaultHref="/orders"></ion-back-button>
     </ion-buttons>
     <ion-title class="ion-text-center">Detalle Pedido</ion-title>
@@ -12,7 +12,6 @@
   </ion-toolbar>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -28,20 +27,31 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <script type="module">
-    import { modalController } from 'https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/index.esm.js';
-    window.modalController = modalController;
-  </script>
 </ion-header>
 
 <ion-content>
   <ion-card>
-    <ion-card-content>
-      <h4>
-        <ion-icon name="bookmarks-outline"></ion-icon> Crear nuevo pedido
+    <ion-card-header>
+      <ion-card-subtitle>
+        <ion-icon name="bookmarks-outline"></ion-icon> Cod. Pedido:
         {{idOrder}}
-      </h4>
-      <div class="form-row">
+      </ion-card-subtitle>
+      <div class="row float-right" style="margin-right: 2px;">
+        <div class="btn-group btn-group-toggle" style="width: 100%;" data-toggle="buttons">
+          <label class="btn" [ngClass]="{'btn-warning':order.status==='Pendiente'}">
+            <input type="radio" name="options" id="pending" autocomplete="off"> Pendiente
+          </label>
+          <label class="btn" [ngClass]="{'btn-success':order.status==='Entregado'}">
+            <input type="radio" name="options" id="delivered" autocomplete="off"> Entregado
+          </label>
+          <label class="btn" [ngClass]="{'btn-danger':order.status==='Cancelado'}">
+            <input type="radio" name="options" id="Cancelled" autocomplete="off"> Cancelado
+          </label>
+        </div>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="form-row" style="margin-top: 30px;">
         <div class="form-group col-md-6">
           <label for="inputPassword4">Cliente</label>
           <input readonly *ngIf="!customers" [(ngModel)]="order.nameCustomer" type="text" class="form-control">
@@ -57,23 +67,22 @@
           </select>
         </div>
       </div>
-      <!-- <ion-item>
-        <ion-label>Vendedor</ion-label>
-        <ion-select required [(ngModel)]="order.idVendor" ok-text="Aceptar" cancel-text="Cancelar">
-          <ion-select-option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}
-          </ion-select-option>
-        </ion-select>
-      </ion-item> -->
-
-      <div class="row">
-        <div class="col-md-6">
-          <label for="exampleInputEmail1">Fecha de pedido</label>
-          <input [(ngModel)]="order.date" type="text" class="form-control" id="exampleInputEmail1"
+      <div class="form-row">
+        <div class="col">
+          <label>Fecha de pedido</label>
+          <input readonly *ngIf="!vendors" [(ngModel)]="order.date" type="text" class="form-control"
+            id="exampleInputEmail1" aria-describedby="emailHelp">
+          <input *ngIf="vendors" [(ngModel)]="order.date" type="text" class="form-control" id="exampleInputEmail1"
             aria-describedby="emailHelp">
         </div>
-        <div class="col float-right">
-          <ion-button class="ion-margin" color="success" (click)="presentModalDetail()">
-            <ion-icon name="add-outline"></ion-icon> Agregar Item
+        <div class="col-md-6 float-right">
+          <ion-button [disabled]="btnActions" style="margin-top: 24px; margin-bottom: inherit;" class="ion-margin"
+            color="success" (click)="addOrProcess()">
+            <ion-icon name="add-outline"></ion-icon>{{actionTitle}}
+          </ion-button>
+          <ion-button [disabled]="btnCancelled" style="margin-top: 24px; margin-bottom: inherit;" class="ion-margin"
+            color="danger" (click)="cancelOrder()">
+            <ion-icon name="add-outline"></ion-icon>Cancelar Pedido
           </ion-button>
         </div>
       </div>
@@ -81,7 +90,7 @@
         <table id="myTable" class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col">Codigo</th>
               <th scope="col">Descripcion</th>
               <th scope="col">Volumen</th>
               <th scope="col">Precio</th>
@@ -92,17 +101,18 @@
           </thead>
           <tbody>
             <tr *ngFor="let detail of details ">
-              <td>{{detail.idOrder}}</td>
+              <td>{{detail.idProduct}}</td>
               <td>{{detail.nameProduct}}</td>
               <td>{{detail.volume}}</td>
               <td>{{detail.price}}</td>
               <td>{{detail.quantity}}</td>
               <td>{{detail.subtotal}}</td>
               <td>
-                <ion-button size="small" color="success" (click)="presentModalDetailEdit(detail,detail.id)">
+                <ion-button [disabled]="btnItem" size="small" color="success"
+                  (click)="presentModalDetailEdit(detail,detail.id)">
                   <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>
                 </ion-button>
-                <ion-button size="small" color="danger" (click)="ConfirmDeleteDetail(detail.id)">
+                <ion-button [disabled]="btnItem" size="small" color="danger" (click)="ConfirmDeleteDetail(detail.id)">
                   <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
                 </ion-button>
               </td>
@@ -114,7 +124,9 @@
       <div class="row">
         <div class="col-md-6">
           <label for="exampleFormControlTextarea1">Observación</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
+          <textarea *ngIf="observation==true" class="form-control" id="exampleFormControlTextarea1" rows="2"
+            [(ngModel)]="order.observation"></textarea>
+          <textarea readonly *ngIf="observation==false" class="form-control" id="exampleFormControlTextarea1" rows="2"
             [(ngModel)]="order.observation"></textarea>
         </div>
         <div class="col float-right">
@@ -123,10 +135,10 @@
       </div>
 
       <ion-item-group class="ion-text-center float-right">
-        <ion-button color="secondary" routerLink="/orders">
+        <ion-button color="secondary" routerLink="/orders" (click)="undoOrder()">
           <ion-icon name="arrow-back-outline"></ion-icon>Volver
         </ion-button>
-        <ion-button color="success" (click)="saveOrder(order)">
+        <ion-button [disabled]="btnSave" color="success" (click)="saveOrder(order)">
           <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
         </ion-button>
       </ion-item-group>
@@ -134,8 +146,4 @@
     </ion-card-content>
   </ion-card>
 
-  <script type="text/javascript">
-    var rowCount = $('#myTable >tbody >tr').length;
-    console.log(rowCount);
-  </script>
 </ion-content>

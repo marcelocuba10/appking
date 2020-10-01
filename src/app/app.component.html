@@ -1,3 +1,59 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+    <ion-split-pane contentId="menu-content" when="xs" [disabled]="true"
+    (ionSplitPaneVisible)="onSplitPaneVisible(event)">
+    <ion-menu contentId="menu-content" menuId="menu-content" side="start" type="overlay">
+      <ion-header>
+        <ion-toolbar translucent>
+          <ion-title>Menu</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerLink]="['/tabs']">
+              <ion-icon name="home" slot="start"></ion-icon>
+              <ion-label>Inicio</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerLink]="['/product']">
+              <ion-icon name="cube-outline" slot="start"></ion-icon>
+              <ion-label>Productos</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerLink]="['/customer']">
+              <ion-icon name="man-outline" slot="start"></ion-icon>
+              <ion-label>Clientes</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerLink]="['/vendors']">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-label>Vendedores</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item>
+              <ion-icon name="receipt-sharp" slot="start"></ion-icon>
+              <ion-label>Aviso Legal</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item>
+              <ion-icon name="settings" slot="start"></ion-icon>
+              <ion-label>Configuraciones</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item>
+              <ion-icon name="share-social-sharp" slot="start"></ion-icon>
+              <ion-label>Compartir AppKing</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="menu-content"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>

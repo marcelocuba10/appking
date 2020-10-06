@@ -36,30 +36,33 @@
 
 <ion-content>
   <ion-card>
+    <!-- <form (ngSubmit)="saveSale()" [formGroup]="myForm"> -->
       <ion-card-header>
-      <ion-card-subtitle>
-        <ion-icon name="bookmarks-outline"></ion-icon> Cod. Venta: 
-        {{saleId}}
-      </ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="inputPassword4">Cliente</label>
-          <input readonly *ngIf="!customers" [(ngModel)]="sale.nameCustomer" type="text" class="form-control">
-          <select *ngIf="customers" required class="form-control" [(ngModel)]="sale.idCustomer">
-            <option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}</option>
-          </select>
+        <ion-card-subtitle>
+          <ion-icon name="bookmarks-outline"></ion-icon> Cod. Venta:
+          {{saleId}}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Cliente</label>
+            <input readonly *ngIf="!customers" [(ngModel)]="sale.nameCustomer" type="text"
+              class="form-control">
+            <select *ngIf="customers" required class="form-control" [(ngModel)]="sale.idCustomer">
+              <option *ngFor="let customer of customers" [value]="customer.id">{{customer.name}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Vendedor</label>
+            <input readonly *ngIf="!vendors" [(ngModel)]="sale.nameVendor" type="text"
+              class="form-control">
+            <select *ngIf="vendors" class="form-control" [(ngModel)]="sale.idVendor">
+              <option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group col-md-6">
-          <label for="inputPassword4">Vendedor</label>
-          <input readonly *ngIf="!vendors" [(ngModel)]="sale.nameVendor" type="text" class="form-control">
-          <select *ngIf="vendors" class="form-control" [(ngModel)]="sale.idVendor">
-            <option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</option>
-          </select>
-        </div>
-      </div>
-      <!-- <ion-item>
+        <!-- <ion-item>
         <ion-label>Vendedor</ion-label>
         <ion-select required [(ngModel)]="sale.idVendor" ok-text="Aceptar" cancel-text="Cancelar">
           <ion-select-option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}
@@ -67,76 +70,98 @@
         </ion-select>
       </ion-item> -->
 
-      <div class="row">
-        <div class="col-md-6">
-          <label for="exampleInputEmail1">Fecha de venta</label>
-          <input [(ngModel)]="sale.date" type="text" class="form-control" id="exampleInputEmail1">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="exampleInputEmail1">Fecha de venta</label>
+            <input [(ngModel)]="sale.date" type="text" class="form-control" id="exampleInputEmail1">
+          </div>
+          <div class="col float-right">
+            <ion-button class="ion-margin" color="warning" (click)="createPdf()"> 
+              <ion-icon name="print-outline"></ion-icon> Imprimir
+            </ion-button>
+            <ion-button class="ion-margin" color="success" (click)="presentModalDetail()">
+              <ion-icon name="add-outline"></ion-icon> Agregar Item
+            </ion-button>
+          </div>
         </div>
-        <div class="col float-right">
-          <ion-button class="ion-margin" color="success" (click)="presentModalDetail()">
-            <ion-icon name="add-outline"></ion-icon> Agregar Item
+        <div class="table-responsive" style="margin-top: 20px;">
+          <table id="myTable" class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Volumen</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of details ">
+                <td>{{detail.idSale}}</td>
+                <td>{{detail.nameProduct}}</td>
+                <td>{{detail.volume}}</td>
+                <td>{{detail.price}}</td>
+                <td>{{detail.quantity}}</td>
+                <td>{{detail.subtotal}}</td>
+                <td>
+                  <ion-button size="small" color="success" (click)="presentModalDetailEdit(detail,detail.id)">
+                    <ion-icon name="create-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button size="small" color="danger" (click)="ConfirmDeleteDetail(detail.id)">
+                    <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
+                  </ion-button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <label for="exampleFormControlTextarea1">Observación</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
+              [(ngModel)]="sale.observation"></textarea>
+          </div>
+          <div class="col float-right">
+            <label class="font-price">{{sale.total | currency: 'GS '}}</label>
+          </div>
+        </div>
+
+        <ion-item-group class="ion-text-center float-right">
+          <ion-button color="secondary" routerLink="/sales" (click)="undoSale()">
+            <ion-icon name="arrow-back-outline"></ion-icon>Volver
           </ion-button>
-        </div>
-      </div>
-      <div class="table-responsive" style="margin-top: 20px;">
-        <table id="myTable" class="table table-hover table-bordered table-striped">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Descripcion</th>
-              <th scope="col">Volumen</th>
-              <th scope="col">Precio</th>
-              <th scope="col">Cantidad</th>
-              <th scope="col">Subtotal</th>
-              <th scope="col">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let detail of details ">
-              <td>{{detail.idSale}}</td>
-              <td>{{detail.nameProduct}}</td>
-              <td>{{detail.volume}}</td>
-              <td>{{detail.price}}</td>
-              <td>{{detail.quantity}}</td>
-              <td>{{detail.subtotal}}</td>
-              <td>
-                <ion-button size="small" color="success" (click)="presentModalDetailEdit(detail,detail.id)">
-                  <ion-icon slot="icon-only" color="light" name="create-outline"></ion-icon>
-                </ion-button>
-                <ion-button size="small" color="danger" (click)="ConfirmDeleteDetail(detail.id)">
-                  <ion-icon slot="icon-only" color="light" name="trash"></ion-icon>
-                </ion-button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          <ion-button color="success" (click)="saveSale(sale)">
+            <ion-icon class="m-icon" name="save-outline" type="submit"></ion-icon>Guardar
+          </ion-button>
+        </ion-item-group>
 
-      <div class="row">
-        <div class="col-md-6">
-          <label for="exampleFormControlTextarea1">Observación</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
-            [(ngModel)]="sale.observation"></textarea>
-        </div>
-        <div class="col float-right">
-          <label class="font-price">{{sale.total | currency: 'GS '}}</label>
-        </div>
-      </div>
-
-      <ion-item-group class="ion-text-center float-right">
-        <ion-button color="secondary" routerLink="/sales" (click)="undoSale()">
-          <ion-icon name="arrow-back-outline"></ion-icon>Volver
-        </ion-button>
-        <ion-button color="success" (click)="saveSale(sale)">
-          <ion-icon class="m-icon" name="save-outline"></ion-icon>Guardar
-        </ion-button>
-      </ion-item-group>
-
-    </ion-card-content>
+      </ion-card-content>
+      <!-- <form (ngSubmit)="createPdf()" [formGroup]="myForm">
+      <ion-item>
+        <ion-label>include logo image?</ion-label>
+        <ion-checkbox formControlName="showLogo" slot="start"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">From</ion-label>
+        <ion-input formControlName="from"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">To</ion-label>
+        <ion-input formControlName="to"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Text</ion-label>
+        <ion-input formControlName="text" rows="3"></ion-input>
+      </ion-item>
+      <ion-button expand="full" type="submit">Create PDF</ion-button>
+    </form>
+    <img [src]="photoPreview" *ngIf="photoPreview">
+    <ion-button expand="full" (click)="takePicture()">Add picture</ion-button>
+    <ion-button expand="full" (click)="downloadPdf()" color="secondary" [disabled]="!pdfObj">Save PDF</ion-button> -->
+    <!-- </form> -->
   </ion-card>
 
-  <script type="text/javascript">
-    var rowCount = $('#myTable >tbody >tr').length;
-    console.log(rowCount);
-  </script>
 </ion-content>

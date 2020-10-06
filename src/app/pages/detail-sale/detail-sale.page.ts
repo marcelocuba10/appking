@@ -6,7 +6,7 @@ import { Product } from './../../models/product';
 import { Vendor } from './../../models/vendor';
 import { VendorService } from 'src/app/services/vendor.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { LoadingController, NavController, ModalController, AlertController } from '@ionic/angular';
+import { LoadingController, NavController, ModalController, Platform } from '@ionic/angular';
 import { AppService } from './../../services/app.service';
 import { SaleService } from 'src/app/services/sale.service';
 import { CustomerService } from './../../services/customer.service';
@@ -18,12 +18,27 @@ import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import * as firebase from 'firebase';
 
+import { HttpClient } from '@angular/common/http';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Camera, CameraResultType, CameraSource, Filesystem, FilesystemDirectory } from '@capacitor/core';
+
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+
 @Component({
   selector: 'app-detail-sale',
   templateUrl: './detail-sale.page.html',
   styleUrls: ['./detail-sale.page.scss'],
 })
 export class DetailSalePage implements OnInit {
+
+  myForm: FormGroup;
+  pdfObj = null;
+  photoPreview = null;
+  logoData = null;
 
   public details = new Array<DetailSale>();
   public sale = {} as Sale;
@@ -53,12 +68,26 @@ export class DetailSalePage implements OnInit {
     private navCtrl: NavController,
     private readonly firestore: AngularFirestore,
     public modalCtrl: ModalController,
-    private ItemDetailService: ItemDetailService
+    private ItemDetailService: ItemDetailService,
+    private fb: FormBuilder,
+    private plt: Platform,
+    private http: HttpClient,
+    private FileOpener: FileOpener
+
   ) {
     this.saleId = this.actRoute.snapshot.paramMap.get("id");
   }
 
   ngOnInit() {
+
+    // this.myForm = this.fb.group({
+    //   showLogo: true,
+    //   customer: this.sale.nameCustomer,
+    //   vendor: this.sale.nameVendor,
+    //   text: 'testing newed'
+    // })
+
+    this.loadLocalAssetToBase64(); //to image (optional)
 
     if (this.saleId) {
       //show data sale existing
@@ -75,6 +104,133 @@ export class DetailSalePage implements OnInit {
 
     this.sale.date = moment().locale('es').format('L');
 
+  }
+
+  loadLocalAssetToBase64() {
+    this.http.get('../../../assets/img/logoCaminera.png', { responseType: 'blob' }).
+      subscribe(res => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.logoData = reader.result;
+        }
+        reader.readAsDataURL(res);
+      })
+  }
+
+  // async takePicture() {
+  //   const image = await Camera.getPhoto({
+  //     quality: 100,
+  //     allowEditing: false,
+  //     resultType: CameraResultType.Base64,
+  //     source: CameraSource.Camera
+  //   });
+  //   this.photoPreview = `data:image/jpeg;base64,${image.base64String}`;
+  // }
+
+  createPdf() {
+
+    this.myForm = this.fb.group({
+      showLogo: true,
+      customer: this.sale.nameCustomer,
+      vendor: this.sale.nameVendor,
+      text: 'testing newed'
+    })
+
+    const formValue = this.myForm.value;
+    const image = this.photoPreview ? { image: this.photoPreview, width: 300 } : {};
+
+    let logo = {};
+    if (formValue.showLogo) {
+      logo = { image: this.logoData, width: 50 };
+    }
+
+    const docDefinition = {
+      content: [
+        {
+          columns: [
+            logo,
+            {
+              alignment: 'right',
+              text: new Date().toTimeString()
+            }]
+        },
+        { text: 'REMINDER', style: 'header' },
+        {
+          columns: [{
+            width: '50%',
+            text: 'Customer',
+            style: 'subheader'
+          },
+          {
+            width: '50%',
+            text: 'Vendor',
+            style: 'subheader'
+          }
+          ]
+        },
+        {
+          columns: [{
+            width: '50%',
+            text: formValue.customer,
+          },
+          {
+            width: '50%',
+            text: formValue.vendor
+          }
+          ]
+        },
+        image,
+        { text: formValue.text, margin: [0, 20, 0, 20] },
+        {
+          style: 'tableExample',
+          table: {
+            body: [
+              ['Descripcion', 'Volumen', 'Precio'],
+              ['dsfsdfsd', 'Another one here', '34534']
+            ]
+          }
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 15, 0, 0]
+        },
+        subheader: {
+          fontSize: 14,
+          bold: true,
+          margin: [0, 15, 0, 0]
+        }
+      }
+    }
+    this.pdfObj = pdfMake.createPdf(docDefinition);
+    console.log(this.pdfObj);
+
+    this.downloadPdf();
+  }
+
+  downloadPdf() {
+    if (this.plt.is('cordova')) {
+      this.pdfObj.getBase64(async (data) => {
+        try {
+          let path = `pdf/myletter_${Date.now()}.pdf`;
+
+          const result = await Filesystem.writeFile({
+            path,
+            data,
+            directory: FilesystemDirectory.Documents,
+            recursive: true
+          });
+          this.FileOpener.open(`${result.uri}`, 'aplication/pdf');
+        } catch (error) {
+          console.error("Unable to write file", error);
+        }
+      })
+
+    } else {
+      this.pdfObj.download();
+    }
   }
 
   async presentModalDetail() {
@@ -119,7 +275,7 @@ export class DetailSalePage implements OnInit {
 
   }
 
-  async undoSale(){
+  async undoSale() {
 
     if (this.isExisting) {
       return;

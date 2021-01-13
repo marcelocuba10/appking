@@ -28,15 +28,17 @@ export class DetailProductPage implements OnInit {
     private actRoute: ActivatedRoute,
     private productService: ProductService
   ) {
-    //captura el ID
+    //capture ID
     this.productId = this.actRoute.snapshot.paramMap.get("id");
   }
 
   ngOnInit() {
+
     if (this.productId) {
       this.getProductById();
     }
     this.getCategory();
+
   }
 
   ngOnDestroy() {
@@ -45,23 +47,31 @@ export class DetailProductPage implements OnInit {
   }
 
   async getProductById() {
-    this.productSubscription = (await this.productService.getProductById(this.productId)).valueChanges().subscribe(
-      data => {
-        this.product.name = data["name"];
-        this.product.category = data["category"];
-        this.product.created = data["created"];
-        this.product.purchase_price = data["purchase_price"];
-        this.product.sale_price = data["sale_price"];
-        this.product.volume = data["volume"];
-        this.product.quantity = data["quantity"];
-        this.product.image = data["image"];
-      })
+
+    try {
+      this.productSubscription = (await this.productService.getProductById(this.productId)).valueChanges().subscribe(
+        data => {
+          this.product.name = data["name"];
+          this.product.category = data["category"];
+          this.product.created = data["created"];
+          this.product.purchase_price = data["purchase_price"];
+          this.product.sale_price = data["sale_price"];
+          this.product.volume = data["volume"];
+          this.product.quantity = data["quantity"];
+          this.product.image = data["image"];
+        })
+    } catch (error) {
+      this.appService.presentToast(error);
+    }
+
   }
 
   async getCategory() {
+
     this.categorySubscription = (await this.productService.getCategory()).subscribe(data => {
       this.categories = data;
     })
+
   }
 
   async saveProduct() {
@@ -99,9 +109,11 @@ export class DetailProductPage implements OnInit {
         }
       }
     }
+
   }
 
   formValidation() {
+
     if (!this.product.name) {
       this.appService.presentToast("Ingrese nombre del producto");
       this.loading.dismiss();
@@ -133,13 +145,16 @@ export class DetailProductPage implements OnInit {
     }
 
     return true;
+
   }
 
   async presentLoading() {
+
     this.loading = await this.loadingCtrl.create({
       message: "Por favor, espere.."
     });
     return this.loading.present();
+
   }
 
 }

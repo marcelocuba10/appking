@@ -17,7 +17,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrderDetail } from '../../models/order-detail';
 import * as moment from 'moment';
 import * as firebase from 'firebase';
-import { fsync } from 'fs';
+// import { fsync } from 'fs';
 
 @Component({
   selector: 'app-detail-order',
